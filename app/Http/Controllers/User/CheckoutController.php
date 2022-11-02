@@ -38,12 +38,66 @@ class CheckoutController extends Controller
         $user = Auth::guard('api')->user();
         $cartProducts = ShoppingCart::with('product','variants.variantItem')->where('user_id', $user->id)->select('id','product_id','qty')->get();
 
+        $weight = 0;
+        $qty = 0;
+        $addresses = Address::with('country','countryState','city')->where(['user_id' => $user->id])->get();
+
+        foreach ($cartProducts as $key => $cart) {
+            $weight += $cart->product->weight;
+            $qty += $cart->qty;
+        }
+        $ciy = $country_code = '';
+        foreach ($addresses as $key => $addr) {
+            if($addr->default_shipping == 1)
+            {
+                $country_code = $addr->country->code;
+                $ciy = $addr->city->name;
+            }
+        }
+        $params = array(
+            'ClientInfo'            => $this->_getClientInfo(),
+                                    
+            'Transaction'           => array(
+                                        'Reference1'            => '001' 
+                                    ),
+                                    
+            'OriginAddress'         => array(
+                                        'City'                  => env('ORIGIN_CITY'),
+                                        'CountryCode'           => env('ORIGIN_COUNTRY_CODE')
+                                    ),
+                                    
+            'DestinationAddress'    => array(
+                                        'City'                  => $ciy,
+                                        'CountryCode'           => $country_code
+                                    ),
+            'ShipmentDetails'       => array(
+                                        'PaymentType'            => 'P',
+                                        'ProductGroup'           => 'EXP',
+                                        'ProductType'            => 'PPX',
+                                        'ActualWeight'           => array('Value' => $weight, 'Unit' => 'KG'),
+                                        'ChargeableWeight'       => array('Value' => $weight, 'Unit' => 'KG'),
+                                        'NumberOfPieces'         => $qty
+                                    )
+        );
+        
+        $soapClient = new \SoapClient(storage_path('aramex/aramex-rates-calculator-wsdl.wsdl'), array('trace' => 1));
+        $results = $soapClient->CalculateRate($params);
+        $shipping_cost = 0;
+
+        if($results->HasErrors == false)
+        {
+            $shipping_cost = $results->TotalAmount->Value;
+        }
+        else{
+            return response()->json(['message' => "Address is not Valid."],403);
+        }
+
         if($cartProducts->count() == 0){
             $notification = trans('Your shopping cart is empty');
             return response()->json(['message' => $notification],403);
         }
 
-        $addresses = Address::with('country','countryState','city')->where(['user_id' => $user->id])->get();
+        
         $shippings = Shipping::all();
 
         $couponOffer = '';
@@ -77,11 +131,22 @@ class CheckoutController extends Controller
             'flutterwavePaymentInfo' => $flutterwavePaymentInfo,
             'paypalPaymentInfo' => $paypalPaymentInfo,
             'bankPaymentInfo' => $bankPaymentInfo,
+            'shippingCost'   => $shipping_cost
         ],200);
 
     }
     private function _getClientInfo()
     {
+        // return [
+        //     'AccountNumber'         => '4004636',
+        //     'UserName'              => 'reem@reem.com',
+        //     'Password'              => '123456789',
+        //     'AccountPin'            => '432432',
+        //     'AccountEntity'         => 'RUH',
+        //     'AccountCountryCode'    => 'SA',
+        //     'Version'               => 'v1',
+        //     'Source'             => null
+        // ];
         return [
             'AccountNumber'         => '60520280',
             'UserName'              => 'zahraa.muzahem@icloud.com',
@@ -95,138 +160,63 @@ class CheckoutController extends Controller
     }
     public function shipment_rate(Request $request)
     {
+        // $params = array(
+        //     'ClientInfo'            => $this->_getClientInfo(),
+                                    
+        //     'Transaction'           => array(
+        //                                 'Reference1'            => '001' 
+        //                             ),
+                                    
+        //     'OriginAddress'         => array(
+        //                                 'City'                  => 'Amman',
+        //                                 'CountryCode'               => 'JO'
+        //                             ),
+                                    
+        //     'DestinationAddress'    => array(
+        //                                 'City'                  => 'England',
+        //                                 'CountryCode'           => 'UK'
+        //                             ),
+        //     'ShipmentDetails'       => array(
+        //                                 'PaymentType'            => 'P',
+        //                                 'ProductGroup'           => 'EXP',
+        //                                 'ProductType'            => 'PPX',
+        //                                 'ActualWeight'           => array('Value' => 50, 'Unit' => 'KG'),
+        //                                 'ChargeableWeight'       => array('Value' => 50, 'Unit' => 'KG'),
+        //                                 'NumberOfPieces'         => 10
+        //                             )
+        // );
         
-        $params = array(
-        'ClientInfo'            => array(
-            'AccountNumber'         => '60520280',
-            'UserName'              => 'zahraa.muzahem@icloud.com',
-            'Password'              => 'Zahraa@20',
-            'AccountPin'            => '321321',
-            'AccountEntity'         => 'DOH',
-            'AccountCountryCode'    => 'QA',
-            'Version'               => 'v1',
-            'Source'             => null
-        ),
-                                
-        'Transaction'           => array(
-                                    'Reference1'            => '001' 
-                                ),
-                                
-        'OriginAddress'         => array(
-                                    'City'                  => 'Amman',
-                                    'CountryCode'               => 'JO'
-                                ),
-                                
-        'DestinationAddress'    => array(
-                                    'City'                  => 'Dubai',
-                                    'CountryCode'           => 'AE'
-                                ),
-        'ShipmentDetails'       => array(
-                                    'PaymentType'            => 'P',
-                                    'ProductGroup'           => 'EXP',
-                                    'ProductType'            => 'PPX',
-                                    'ActualWeight'           => array('Value' => 50, 'Unit' => 'KG'),
-                                    'ChargeableWeight'       => array('Value' => 50, 'Unit' => 'KG'),
-                                    'NumberOfPieces'         => 10
-                                )
-    );
+        // $soapClient = new \SoapClient(storage_path('aramex/aramex-rates-calculator-wsdl.wsdl'), array('trace' => 1));
+        // $results = $soapClient->CalculateRate($params); 
+        // return $results;
+        $soapClient = new \SoapClient(storage_path('aramex/Location-APIWSDL.wsdl'));
+        
     
-    $soapClient = new \SoapClient(storage_path('aramex/aramex-rates-calculator-wsdl.wsdl'), array('trace' => 1));
-    $results = $soapClient->CalculateRate($params); 
-    dd($results);
-        $originAddress = [
-            'line1' => 'Test string',
-            'City' => 'Amman',
-            'CountryCode' => 'JO'
-        ];
+        $params = array(
+            'ClientInfo'            => $this->_getClientInfo(),
 
-        $destinationAddress = [
-            'line1' => 'Test String',
-            'City' => 'Dubai',
-            'CountryCode' => 'AE'
-        ];
-
-        $shipmentDetails = [
-            'weight' => 5, // KG
-            'NumberOfPieces' => 2,
-            'PaymentType' => 'P', // if u don't pass it, it will take the config default value 
-            'ProductGroup' => 'EXP', // if u don't pass it, it will take the config default value
-            'ProductType' => 'PPX', // if u don't pass it, it will take the config default value
-            'height' => 5.5, // CM
-            'width' => 3,  // CM
-            'length' => 2.3  // CM
-        ];
-
-
-        $currency = 'USD';
-
-        $destinationAddress = [
-            "Line1"       => "Test string",
-            "Line2"       => "",
-            "Line3"       => "",
-            "City"        => "Amman",
-            "PostCode"    => "3800",
-            "CountryCode" => "JO",
-        ];
-        $weight = 0.0;
-        $count_items = 0;
-
-
-        $params = [
-            'ClientInfo'         => $this->_getClientInfo(),
-            'Transaction'        => [
-                'Reference1' => '001'
-            ],
-            'OriginAddress'      => $originAddress,
-            'DestinationAddress' => $destinationAddress,
-            'ShipmentDetails'    => $shipmentDetails
-        ];
-
+            'Transaction'           => array(
+                                        'Reference1'            => '001',
+                                        'Reference2'            => '002',
+                                        'Reference3'            => '003',
+                                        'Reference4'            => '004',
+                                        'Reference5'            => '005'
+                                 
+                                    ),
+            
+            );
+        
+        // calling the method and printing results
         try {
-            $soapClient = new \SoapClient(storage_path('aramex/aramex-rates-calculator-wsdl.wsdl'));
+            $auth_call = $soapClient->FetchCountries($params);
 
-            return $soapClient->CalculateRate($params);
+            echo '<pre>';
+            return $auth_call;
+            die();
 
         } catch (SoapFault $fault) {
-            die('Error : '.$fault->faultstring);
+            die('Error : ' . $fault->faultstring);
         }
-        dd($soapClient);
-        $originAddress = [
-            'line1' => 'Test string',
-            'city' => 'Amman',
-            'country_code' => 'JO'
-        ];
 
-        $destinationAddress = [
-            'line1' => 'Test String',
-            'city' => 'Dubai',
-            'country_code' => 'AE'
-        ];
-
-        $shipmentDetails = [
-            'weight' => 5, // KG
-            'number_of_pieces' => 2,
-            'payment_type' => 'P', // if u don't pass it, it will take the config default value 
-            'product_group' => 'EXP', // if u don't pass it, it will take the config default value
-            'product_type' => 'PPX', // if u don't pass it, it will take the config default value
-            'height' => 5.5, // CM
-            'width' => 3,  // CM
-            'length' => 2.3  // CM
-        ];
-
-        $shipmentDetails = [
-            'weight' => 5, // KG
-            'number_of_pieces' => 2, 
-        ];
-
-        $currency = 'USD';
-        $data = Aramex::calculateRate($originAddress, $destinationAddress , $shipmentDetails , 'USD');
-        dd($data);
-        if(!$data->error){
-          dd($data);
-        }
-        else{
-          // handle $data->errors
-        }
     }
 }
