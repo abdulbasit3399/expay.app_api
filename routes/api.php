@@ -223,6 +223,7 @@ Route::group(['middleware' => ['maintainance']], function () {
 
             Route::post('/cash-on-delivery', [PaymentController::class, 'cashOnDelivery'])->name('cash-on-delivery');
             Route::post('/pay-with-stripe', [PaymentController::class, 'payWithStripe'])->name('pay-with-stripe');
+            Route::get('/test/{array}', [PaymentController::class, 'createShipment'])->name('test');
 
 
 

@@ -77,6 +77,7 @@ class PaymentController extends Controller
     $shipping_fee = $total['shipping_fee'];
     $productWeight = $total['productWeight'];
     $shipping = $total['shipping'];
+    $total_qty = $total['total_qty'];
 
     $totalProduct = ShoppingCart::with('variants')->where('user_id', $user->id)->sum('qty');
     $setting = Setting::first();
@@ -90,6 +91,8 @@ class PaymentController extends Controller
     $transaction_id = $request->razorpay_payment_id;
     $order_result = $this->orderStore($user, $total_price, $totalProduct, 'Cash on Delivery', 'cash_on_delivery', 0, $shipping, $shipping_fee, $coupon_price, 1, $request->billing_address_id, $request->shipping_address_id);
 
+    $respon = $this->createShipment($request->billing_address_id,$productWeight,$total_price,$total_qty,$request->shipping_rate);
+    dd($respon);
     $this->sendOrderSuccessMail($user, $total_price, 'Cash on Delivery', 0, $order_result['order'], $order_result['order_details']);
 
     $notification = trans('user_validation.Order submited successfully. please wait for admin approval');
@@ -100,8 +103,14 @@ class PaymentController extends Controller
     return response()->json(['message' => $notification, 'order_id' => $order_id],200);
 
   }
-  public function createShipment($value='')
+  public function createShipment($address_id,$productWeight,$total_price,$total_qty,$shipping_rate)
   {
+    $user = Auth::guard('api')->user();
+    $billing = Address::find($address_id);
+    $total_amount = $total_price + $shipping_rate;
+
+    $soapClient = new \SoapClient(storage_path('aramex/shipping-services-api-wsdl.wsdl'));
+
     $params = array(
       'Shipments' => array(
         'Shipment' => array(
@@ -139,36 +148,36 @@ class PaymentController extends Controller
             'Reference2'    => 'Ref 444444',
             'AccountNumber' => '',
             'PartyAddress'  => array(
-              'Line1'                 => '15 ABC St',
+              'Line1'                 => $billing->address,
               'Line2'                 => '',
               'Line3'                 => '',
-              'City'                  => 'Dubai',
+              'City'                  => $billing->city->name,
               'StateOrProvinceCode'   => '',
               'PostCode'              => '',
-              'CountryCode'           => 'AE'
+              'CountryCode'           => $billing->country->code
             ),
 
             'Contact'       => array(
               'Department'            => '',
-              'PersonName'            => 'Mazen',
+              'PersonName'            => $billing->name,
               'Title'                 => '',
-              'CompanyName'           => 'Aramex',
-              'PhoneNumber1'          => '6666666',
-              'PhoneNumber1Ext'       => '155',
+              'CompanyName'           => '',
+              'PhoneNumber1'          => '',
+              'PhoneNumber1Ext'       => '',
               'PhoneNumber2'          => '',
               'PhoneNumber2Ext'       => '',
               'FaxNumber'             => '',
-              'CellPhone'             => '03247763398',
-              'EmailAddress'          => 'mazen@aramex.com',
+              'CellPhone'             => $billing->phone,
+              'EmailAddress'          => $billing->email,
               'Type'                  => ''
             ),
           ),
 
 
-          'Reference1'                => 'Shpt 0001',
+          'Reference1'                => 'Shpt '.time(),
           'Reference2'                => '',
           'Reference3'                => '',
-          'ForeignHAWB'               => 'ABC 012511',
+          'ForeignHAWB'               => 'ABC '.time(),
           'TransportType'             => 0,
           'ShippingDateTime'          => time(),
           'DueDate'                   => time(),
@@ -188,7 +197,7 @@ class PaymentController extends Controller
             ),
 
             'ActualWeight' => array(
-              'Value'                 => 0.5,
+              'Value'                 => $productWeight,
               'Unit'                  => 'Kg'
             ),
 
@@ -197,12 +206,12 @@ class PaymentController extends Controller
             'PaymentType'           => 'P',
             'PaymentOptions'        => '',
             'Services'              => '',
-            'NumberOfPieces'        => 1,
+            'NumberOfPieces'        => $total_qty,
             'DescriptionOfGoods'    => 'Docs',
             'GoodsOriginCountry'    => 'Jo',
 
             'CashOnDeliveryAmount'  => array(
-              'Value'                 => 0,
+              'Value'                 => $total_amount,
               'CurrencyCode'          => ''
             ),
 
@@ -212,7 +221,7 @@ class PaymentController extends Controller
             ),
 
             'CollectAmount'         => array(
-              'Value'                 => 0,
+              'Value'                 => $total_amount,
               'CurrencyCode'          => ''
             ),
 
@@ -263,19 +272,17 @@ class PaymentController extends Controller
         'PackageType'   => 'Box',
         'Quantity'      => 1,
         'Weight'        => array(
-          'Value'     => 0.5,
+          'Value'     => $productWeight,
           'Unit'      => 'Kg',        
         ),
         'Comments'      => 'Docs',
         'Reference'     => ''
       );
 
-      print_r($params);
 
       try {
         $auth_call = $soapClient->CreateShipments($params);
-        print_r($auth_call);
-        die();
+        return $auth_call;
       } catch (SoapFault $fault) {
         die('Error : ' . $fault->faultstring);
       }
@@ -1171,6 +1178,7 @@ public function sslcommerz(Request $request)
         $coupon_price = 0;
         $shipping_fee = 0;
         $productWeight = 0;
+        $total_qty = 0;
 
         $cartProducts = ShoppingCart::with('product','variants.variantItem')->where('user_id', $user->id)->select('id','product_id','qty')->get();
         if($cartProducts->count() == 0){
@@ -1206,6 +1214,7 @@ public function sslcommerz(Request $request)
             }
           }
 
+          $total_qty += $cartProduct->qty;
           $price = $price * $cartProduct->qty;
           $total_price += $price;
         }
@@ -1255,6 +1264,7 @@ public function sslcommerz(Request $request)
         $arr['shipping_fee'] = $shipping_fee;
         $arr['productWeight'] = $productWeight;
         $arr['shipping'] = $shipping;
+        $arr['total_qty'] = $total_qty;
 
         return $arr;
       }
