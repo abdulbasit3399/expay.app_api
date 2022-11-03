@@ -91,10 +91,47 @@ class UserProfileController extends Controller
         $user = Auth::guard('api')->user();
         $order = Order::with('orderProducts.orderProductVariants','orderAddress')->where('user_id', $user->id)->where('order_id',$orderId)->first();
 
-        return response()->json(['order' => $order]);
+        $tracking = array();
+        if($order && $order->tracking)
+            $tracking = $this->order_track($order->tracking);
+
+        return response()->json(['order' => $order,'tracking' => $tracking]);
     }
 
+    public function order_track($track_id)
+    {
+        $soapClient = new \SoapClient(storage_path('aramex/shipments-tracking-api-wsdl.wsdl'));
+        $soapClient->__getFunctions();
+        
+        $params = array(
+            'ClientInfo'  => array(
+                                        'AccountNumber'         => '60520280',
+                                        'UserName'              => 'zahraa.muzahem@icloud.com',
+                                        'Password'              => 'Zahraa@20',
+                                        'AccountPin'            => '321321',
+                                        'AccountEntity'         => 'DOH',
+                                        'AccountCountryCode'    => 'QA',
+                                        'Version'               => 'v1',
+                                        'Source'             => null
+                                    ),
 
+            'Transaction'           => array(
+                                        'Reference1'            => '001' 
+                                    ),
+            'Shipments'             => array(
+                                        $track_id
+                                    )
+        );
+        
+        try {
+            $auth_call = $soapClient->TrackShipments($params);
+            return $auth_call;
+            die();
+        } catch (SoapFault $fault) {
+            die('Error : ' . $fault->faultstring);
+        }
+
+    }
     public function wishlist(){
         $user = Auth::guard('api')->user();
         $wishlists = Wishlist::with('product')->where(['user_id' => $user->id])->paginate(10);
