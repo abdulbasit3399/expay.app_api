@@ -9,6 +9,8 @@ use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use App\Models\PopularCategory;
 use App\Models\ThreeColumnCategory;
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
 class ProductChildCategoryController extends Controller
 {
     public function __construct()
@@ -69,9 +71,12 @@ class ProductChildCategoryController extends Controller
         ];
         $this->validate($request, $rules,$customMessages);
 
+        $tr = new GoogleTranslate('ar');
+
         $childCategory = new ChildCategory();
         $childCategory->category_id = $request->category;
         $childCategory->sub_category_id = $request->sub_category;
+        $childCategory->name_ar = $tr->translate($request->name);
         $childCategory->name = $request->name;
         $childCategory->slug = $request->slug;
         $childCategory->status = $request->status;
@@ -119,6 +124,7 @@ class ProductChildCategoryController extends Controller
         $childCategory->category_id = $request->category;
         $childCategory->sub_category_id = $request->sub_category;
         $childCategory->name = $request->name;
+        $childCategory->name_ar = $request->name_ar;
         $childCategory->slug = $request->slug;
         $childCategory->status = $request->status;
         $childCategory->save();

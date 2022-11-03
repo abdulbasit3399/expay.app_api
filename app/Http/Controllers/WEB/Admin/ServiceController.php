@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WEB\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class ServiceController extends Controller
 {
@@ -41,7 +42,11 @@ class ServiceController extends Controller
         ];
         $this->validate($request, $rules,$customMessages);
 
+        $tr = new GoogleTranslate('ar');
+
         $service = new Service();
+        $service->title_ar = $tr->translate($request->title);
+        $service->description_ar = $tr->translate($request->description);
         $service->title = $request->title;
         $service->icon = $request->icon;
         $service->description = $request->description;
@@ -85,6 +90,8 @@ class ServiceController extends Controller
         ];
         $this->validate($request, $rules,$customMessages);
 
+        $service->title_ar = $request->title_ar;
+        $service->description_ar = $request->description_ar;
         $service->title = $request->title;
         $service->icon = $request->icon;
         $service->description = $request->description;

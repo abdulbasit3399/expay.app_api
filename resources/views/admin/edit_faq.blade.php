@@ -30,8 +30,16 @@
                                     <input type="text" id="question" class="form-control"  name="question" value="{{ $faq->question }}">
                                 </div>
                                 <div class="form-group col-12">
+                                    <label>{{__('admin.Question')}} AR<span class="text-danger">*</span></label>
+                                    <input type="text" id="question_ar" class="form-control"  name="question_ar" value="{{ $faq->question_ar }}">
+                                </div>
+                                <div class="form-group col-12">
                                     <label>{{__('admin.Answer')}} <span class="text-danger">*</span></label>
                                     <textarea name="answer" id="" cols="30" rows="10" class="summernote">{{ $faq->answer }}</textarea>
+                                </div>
+                                <div class="form-group col-12">
+                                    <label>{{__('admin.Answer')}} AR<span class="text-danger">*</span></label>
+                                    <textarea name="answer_ar" id="" cols="30" rows="10" class="summernote">{{ $faq->answer_ar }}</textarea>
                                 </div>
                                 <div class="form-group col-12">
                                     <label>{{__('admin.Status')}} <span class="text-danger">*</span></label>

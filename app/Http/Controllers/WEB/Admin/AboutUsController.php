@@ -7,6 +7,7 @@ use App\Models\AboutUs;
 use Illuminate\Http\Request;
 use Image;
 use File;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 class AboutUsController extends Controller
 {
 
@@ -23,6 +24,7 @@ class AboutUsController extends Controller
 
     public function update(Request $request, $id)
     {
+        
         $rules = [
             'description' => 'required',
         ];
@@ -46,6 +48,8 @@ class AboutUsController extends Controller
             }
         }
 
+        
+        $aboutUs->description_ar = $request->description_ar;
         $aboutUs->description = $request->description;
         $aboutUs->save();
 
@@ -55,6 +59,7 @@ class AboutUsController extends Controller
     }
 
     public function store(Request $request){
+        $tr = new GoogleTranslate('ar');
         $rules = [
             'description' => 'required',
         ];
@@ -73,6 +78,8 @@ class AboutUsController extends Controller
                 ->save(public_path().'/'.$banner_name);
             $aboutUs->banner_image = $banner_name;
         }
+
+        $aboutUs->description_ar = $tr->translate(strip_tags($request->description));
         $aboutUs->description = $request->description;
         $aboutUs->save();
 

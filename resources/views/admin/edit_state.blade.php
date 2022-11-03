@@ -41,6 +41,10 @@
                                     <label>{{__('admin.State Name')}} <span class="text-danger">*</span></label>
                                     <input type="text" id="name" class="form-control"  name="name" value="{{ $state->name }}">
                                 </div>
+                                <div class="form-group col-12">
+                                    <label>{{__('admin.State Name')}} AR<span class="text-danger">*</span></label>
+                                    <input type="text" id="name_ar" class="form-control"  name="name_ar" value="{{ $state->name_ar }}">
+                                </div>
 
                                 <div class="form-group col-12">
                                     <label>{{__('admin.Status')}} <span class="text-danger">*</span></label>

@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\PopularCategory;
 use App\Models\FeaturedCategory;
 use App\Models\MegaMenuSubCategory;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 use App\Models\MegaMenuCategory;
 use Illuminate\Http\Request;
 use  Image;
@@ -37,6 +38,8 @@ class ProductCategoryController extends Controller
 
     public function store(Request $request)
     {
+        $tr = new GoogleTranslate('ar');
+
         $rules = [
             'name'=>'required|unique:categories',
             'slug'=>'required|unique:categories',
@@ -54,6 +57,7 @@ class ProductCategoryController extends Controller
 
         $category = new Category();
 
+        $category->name_ar = $tr->translate($request->name);
         $category->name = $request->name;
         $category->slug = $request->slug;
         $category->status = $request->status;
@@ -98,6 +102,7 @@ class ProductCategoryController extends Controller
         $this->validate($request, $rules,$customMessages);
 
         $category->icon = $request->icon;
+        $category->name_ar = $request->name_ar;
         $category->name = $request->name;
         $category->slug = $request->slug;
         $category->status = $request->status;

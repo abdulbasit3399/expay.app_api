@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WEB\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Faq;
 use Illuminate\Http\Request;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class FaqController extends Controller
 {
@@ -27,6 +28,7 @@ class FaqController extends Controller
 
     public function store(Request $request)
     {
+        $tr = new GoogleTranslate('ar');
         $rules = [
             'question'=>'required|unique:faqs',
             'answer'=>'required',
@@ -41,6 +43,8 @@ class FaqController extends Controller
 
         $faq = new Faq();
         $faq->question = $request->question;
+        $faq->question_ar = $tr->translate($request->question);
+        $faq->answer_ar = $tr->translate($request->answer);
         $faq->answer = $request->answer;
         $faq->status = $request->status;
         $faq->save();
@@ -79,6 +83,8 @@ class FaqController extends Controller
 
         $faq->question = $request->question;
         $faq->answer = $request->answer;
+        $faq->question_ar = $request->question_ar;
+        $faq->answer_ar = $request->answer_ar;
         $faq->status = $request->status;
         $faq->save();
 

@@ -49,6 +49,10 @@
                                     <label>{{__('Title')}} <span class="text-danger">*</span></label>
                                     <input type="text" id="title" class="form-control"  name="title" value="{{ $flash_sale->title }}">
                                 </div>
+                                <div class="form-group col-6">
+                                    <label>{{__('Title')}} AR<span class="text-danger">*</span></label>
+                                    <input type="text" id="title_ar" class="form-control"  name="title_ar" value="{{ $flash_sale->title_ar }}">
+                                </div>
 
                                 <div class="form-group col-6">
                                     <label>{{__('admin.Offer')}} <span class="text-danger">*</span></label>

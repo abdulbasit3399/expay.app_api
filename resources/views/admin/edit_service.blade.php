@@ -30,12 +30,20 @@
                                     <input type="text" id="title" class="form-control"  name="title" value="{{ $service->title }}">
                                 </div>
                                 <div class="form-group col-12">
+                                    <label>{{__('admin.Title')}} AR<span class="text-danger">*</span></label>
+                                    <input type="text" id="title_ar" class="form-control"  name="title_ar" value="{{ $service->title_ar }}">
+                                </div>
+                                <div class="form-group col-12">
                                     <label>{{__('admin.Icon')}} <span class="text-danger">*</span></label>
                                     <input type="text" id="slug" class="form-control custom-icon-picker"  name="icon" value="{{ $service->icon }}">
                                 </div>
                                 <div class="form-group col-12">
                                     <label>{{__('admin.Description')}} <span class="text-danger">*</span></label>
                                     <textarea name="description" cols="30" rows="10" class="form-control text-area-5">{{ $service->description }}</textarea>
+                                </div>
+                                <div class="form-group col-12">
+                                    <label>{{__('admin.Description')}} <span class="text-danger">*</span></label>
+                                    <textarea name="description_ar" cols="30" rows="10" class="form-control text-area-5">{{ $service->description_ar }}</textarea>
                                 </div>
 
                                 <div class="form-group col-12">

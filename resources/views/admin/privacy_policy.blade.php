@@ -29,6 +29,10 @@
                                         <label>{{__('admin.Privacy Policy')}}<span class="text-danger">*</span></label>
                                         <textarea name="privacy_policy" cols="30" rows="10" class="summernote">{{ $privacyPolicy->privacy_policy }}</textarea>
                                     </div>
+                                    <div class="form-group col-12">
+                                        <label>{{__('admin.Privacy Policy')}} AR<span class="text-danger">*</span></label>
+                                        <textarea name="privacy_policy_ar" cols="30" rows="10" class="summernote">{{ $privacyPolicy->privacy_policy_ar }}</textarea>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
@@ -44,6 +48,13 @@
                                     <div class="form-group col-12">
                                         <label>{{__('admin.Privacy Policy')}}<span class="text-danger">*</span></label>
                                         <textarea name="privacy_policy" cols="30" rows="10" class="summernote"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="form-group col-12">
+                                        <label>{{__('admin.Privacy Policy')}} AR<span class="text-danger">*</span></label>
+                                        <textarea name="privacy_policy_ar" cols="30" rows="10" class="summernote"></textarea>
                                     </div>
                                 </div>
                                 <div class="row">

@@ -39,6 +39,7 @@ class PrivacyPolicyController extends Controller
         $privacyPolicy = new TermsAndCondition();
 
         $privacyPolicy->privacy_policy = $request->privacy_policy;
+        $privacyPolicy->privacy_policy_ar = $request->privacy_policy_ar;
         $privacyPolicy->save();
 
         $notification = trans('admin_validation.Created Successfully');
@@ -60,6 +61,7 @@ class PrivacyPolicyController extends Controller
         $this->validate($request, $rules,$customMessages);
 
         $privacyPolicy->privacy_policy = $request->privacy_policy;
+        $privacyPolicy->privacy_policy_ar = $request->privacy_policy_ar;
         $privacyPolicy->save();
 
         $notification = trans('admin_validation.Updated Successfully');

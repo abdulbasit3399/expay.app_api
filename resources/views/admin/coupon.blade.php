@@ -165,6 +165,10 @@
                                   <input type="text" id="name" class="form-control"  name="name" value="{{ $coupon->name }}">
                               </div>
                               <div class="form-group col-12">
+                                  <label>{{__('admin.Name')}} AR<span class="text-danger">*</span></label>
+                                  <input type="text" id="name_ar" class="form-control"  name="name_ar" value="{{ $coupon->name_ar }}">
+                              </div>
+                              <div class="form-group col-12">
                                   <label>{{__('admin.Code')}} <span class="text-danger">*</span></label>
                                   <input type="text" id="code" class="form-control"  name="code" value="{{ $coupon->code }}">
                               </div>

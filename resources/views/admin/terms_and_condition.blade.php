@@ -31,6 +31,13 @@
 
                                 </div>
                                 <div class="row">
+                                    <div class="form-group col-12">
+                                        <label>{{__('admin.Terms And Conditions')}} AR<span class="text-danger">*</span></label>
+                                        <textarea name="terms_and_condition_ar" cols="30" rows="10" class="summernote">{{ $termsAndCondition->terms_and_condition_ar }}</textarea>
+                                    </div>
+
+                                </div>
+                                <div class="row">
                                     <div class="col-12">
                                         <button class="btn btn-primary">{{__('admin.Update')}}</button>
                                     </div>
@@ -44,6 +51,13 @@
                                     <div class="form-group col-12">
                                         <label>{{__('admin.Terms And Conditions')}}<span class="text-danger">*</span></label>
                                         <textarea name="terms_and_condition" cols="30" rows="10" class="summernote"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="form-group col-12">
+                                        <label>{{__('admin.Terms And Conditions')}} AR<span class="text-danger">*</span></label>
+                                        <textarea name="terms_and_condition_ar" cols="30" rows="10" class="summernote"></textarea>
                                     </div>
                                 </div>
                                 <div class="row">

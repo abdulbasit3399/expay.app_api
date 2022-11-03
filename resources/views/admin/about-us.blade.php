@@ -41,6 +41,10 @@
                                         <label>{{__('admin.Description')}} <span class="text-danger">*</span></label>
                                         <textarea name="description" cols="30" rows="10" class="summernote">{{ $aboutUs->description }}</textarea>
                                     </div>
+                                    <div class="form-group col-12">
+                                        <label>{{__('admin.Description')}} AR<span class="text-danger">*</span></label>
+                                        <textarea name="description_ar" cols="30" rows="10" class="summernote">{{ $aboutUs->description_ar }}</textarea>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
@@ -59,6 +63,10 @@
                                     <div class="form-group col-12">
                                         <label>{{__('admin.Description')}} <span class="text-danger">*</span></label>
                                         <textarea name="description" cols="30" rows="10" class="summernote"></textarea>
+                                    </div>
+                                    <div class="form-group col-12">
+                                        <label>{{__('admin.Description')}} AR<span class="text-danger">*</span></label>
+                                        <textarea name="description_ar" cols="30" rows="10" class="summernote"></textarea>
                                     </div>
                                 </div>
                                 <div class="row">

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Shipping;
 use App\Models\City;
 use App\Models\Setting;
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
 class ShippingMethodController extends Controller
 {
     public function __construct()
@@ -44,10 +46,12 @@ class ShippingMethodController extends Controller
             'condition_to.required' => trans('Condition to is required'),
         ];
         $this->validate($request, $rules,$customMessages);
-
+        $tr = new GoogleTranslate('ar');
+        
         $shipping = new Shipping();
         $shipping->city_id = $request->city_id;
         $shipping->shipping_rule = $request->shipping_rule;
+        $shipping->shipping_rule_ar = $tr->translate($request->shipping_rule);
         $shipping->type = $request->type;
         $shipping->shipping_fee = $request->shipping_fee;
         $shipping->condition_from = $request->condition_from;
@@ -100,6 +104,7 @@ class ShippingMethodController extends Controller
 
         $shipping = Shipping::find($id);
         $shipping->shipping_rule = $request->shipping_rule;
+        $shipping->shipping_rule_ar = $request->shipping_rule_ar;
         $shipping->type = $request->type;
         $shipping->shipping_fee = $request->shipping_fee;
         $shipping->condition_from = $request->condition_from;

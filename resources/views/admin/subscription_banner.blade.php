@@ -43,6 +43,16 @@
                                 <input type="text" name="header" class="form-control" value="{{ $subscription_banner->header }}">
                             </div>
 
+                            <div class="form-group">
+                                <label for="">{{__('Title')}} AR</label>
+                                <input type="text" name="title_ar" class="form-control" value="{{ $subscription_banner->title_ar }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">{{__('Header')}} AR</label>
+                                <input type="text" name="header_ar" class="form-control" value="{{ $subscription_banner->header_ar }}">
+                            </div>
+
                             <button type="submit" class="btn btn-primary">{{__('admin.Update')}}</button>
                         </form>
                     </div>

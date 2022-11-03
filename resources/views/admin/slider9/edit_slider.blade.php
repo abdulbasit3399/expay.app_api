@@ -40,15 +40,27 @@
                                     <label>{{__('Badge')}} <span class="text-danger">*</span></label>
                                     <input type="text" name="badge" class="form-control" value="{{ $slider->badge }}">
                                 </div>
+                                <div class="form-group col-12">
+                                    <label>{{__('Badge')}} AR<span class="text-danger">*</span></label>
+                                    <input type="text" name="badge_ar" class="form-control" value="{{ $slider->badge_ar }}">
+                                </div>
 
                                 <div class="form-group col-12">
                                     <label>{{__('Title One')}} <span class="text-danger">*</span></label>
                                     <input type="text" name="title_one" class="form-control" value="{{ $slider->title_one }}">
                                 </div>
+                                <div class="form-group col-12">
+                                    <label>{{__('Title One')}} AR<span class="text-danger">*</span></label>
+                                    <input type="text" name="title_one_ar" class="form-control" value="{{ $slider->title_one_ar }}">
+                                </div>
 
                                 <div class="form-group col-12">
                                     <label>{{__('Title Two')}} <span class="text-danger">*</span></label>
                                     <input type="text" name="title_two" class="form-control" value="{{ $slider->title_two }}">
+                                </div>
+                                <div class="form-group col-12">
+                                    <label>{{__('Title Two')}} AR<span class="text-danger">*</span></label>
+                                    <input type="text" name="title_two_ar" class="form-control" value="{{ $slider->title_two_ar }}">
                                 </div>
 
                                 <div class="form-group col-12">

@@ -79,6 +79,12 @@ class PaymentController extends Controller
     $shipping = $total['shipping'];
     $total_qty = $total['total_qty'];
 
+    $respon = $this->createShipment($request->billing_address_id,$productWeight,$total_price,$total_qty,$request->shipping_rate);
+    if(!$respon->Shipments->ProcessedShipment->ID)
+      return response()->json(['message' => "There is some error creating Shipment."],403);
+
+    $ship_track = $respon->Shipments->ProcessedShipment->ID;
+
     $totalProduct = ShoppingCart::with('variants')->where('user_id', $user->id)->sum('qty');
     $setting = Setting::first();
 
@@ -89,10 +95,10 @@ class PaymentController extends Controller
     $currency_name = $setting->currency_name;
 
     $transaction_id = $request->razorpay_payment_id;
-    $order_result = $this->orderStore($user, $total_price, $totalProduct, 'Cash on Delivery', 'cash_on_delivery', 0, $shipping, $shipping_fee, $coupon_price, 1, $request->billing_address_id, $request->shipping_address_id);
+    $order_result = $this->orderStore($user, $total_price, $totalProduct, 'Cash on Delivery', 'cash_on_delivery', 0, $shipping, $shipping_fee, $coupon_price, 1, $request->billing_address_id, $request->shipping_address_id,$ship_track);
 
-    $respon = $this->createShipment($request->billing_address_id,$productWeight,$total_price,$total_qty,$request->shipping_rate);
-    dd($respon);
+    
+    
     $this->sendOrderSuccessMail($user, $total_price, 'Cash on Delivery', 0, $order_result['order'], $order_result['order_details']);
 
     $notification = trans('user_validation.Order submited successfully. please wait for admin approval');
@@ -105,6 +111,7 @@ class PaymentController extends Controller
   }
   public function createShipment($address_id,$productWeight,$total_price,$total_qty,$shipping_rate)
   {
+    $setting = Setting::first();
     $user = Auth::guard('api')->user();
     $billing = Address::find($address_id);
     $total_amount = $total_price + $shipping_rate;
@@ -161,13 +168,14 @@ class PaymentController extends Controller
               'Department'            => '',
               'PersonName'            => $billing->name,
               'Title'                 => '',
-              'CompanyName'           => '',
-              'PhoneNumber1'          => '',
+              'CompanyName'           => $billing->name,
+              'PhoneNumber1'          => $billing->phone,
               'PhoneNumber1Ext'       => '',
-              'PhoneNumber2'          => '',
+              'PhoneNumber2'          => $billing->phone,
               'PhoneNumber2Ext'       => '',
               'FaxNumber'             => '',
               'CellPhone'             => $billing->phone,
+              'Telephone'             => $billing->phone,
               'EmailAddress'          => $billing->email,
               'Type'                  => ''
             ),
@@ -211,8 +219,10 @@ class PaymentController extends Controller
             'GoodsOriginCountry'    => 'Jo',
 
             'CashOnDeliveryAmount'  => array(
-              'Value'                 => $total_amount,
+              'Value'                 => 0,
+              // 'Value'                 => $total_amount,
               'CurrencyCode'          => ''
+              // 'CurrencyCode'          => $setting->currency_icon
             ),
 
             'InsuranceAmount'       => array(
@@ -221,7 +231,7 @@ class PaymentController extends Controller
             ),
 
             'CollectAmount'         => array(
-              'Value'                 => $total_amount,
+              'Value'                 => 0,
               'CurrencyCode'          => ''
             ),
 
@@ -1269,7 +1279,7 @@ public function sslcommerz(Request $request)
         return $arr;
       }
 
-      public function orderStore($user, $total_price, $totalProduct, $payment_method, $transaction_id, $paymetn_status, $shipping, $shipping_fee, $coupon_price, $cash_on_delivery,$billing_address_id,$shipping_address_id){
+      public function orderStore($user, $total_price, $totalProduct, $payment_method, $transaction_id, $paymetn_status, $shipping, $shipping_fee, $coupon_price, $cash_on_delivery,$billing_address_id,$shipping_address_id,$ship_track = ''){
         $cartProducts = ShoppingCart::with('product','variants.variantItem')->where('user_id', $user->id)->select('id','product_id','qty')->get();
         if($cartProducts->count() == 0){
           $notification = trans('Your shopping cart is empty');
@@ -1287,6 +1297,7 @@ public function sslcommerz(Request $request)
         $order->payment_status = $paymetn_status;
         $order->shipping_method = $shipping->shipping_rule;
         $order->shipping_cost = $shipping_fee;
+        $order->tracking = $ship_track;
         $order->coupon_coast = $coupon_price;
         $order->order_status = 0;
         $order->cash_on_delivery = $cash_on_delivery;

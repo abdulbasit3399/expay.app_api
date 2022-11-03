@@ -108,6 +108,10 @@
                                 <input type="text" class="form-control" name="name" value="{{ $link->title }}">
                             </div>
                             <div class="form-group">
+                                <label for="">{{__('admin.Link Name')}} AR</label>
+                                <input type="text" class="form-control" name="name_ar" value="{{ $link->title_ar }}">
+                            </div>
+                            <div class="form-group">
                                 <label for="">{{__('admin.Link')}}</label>
                                 <input type="text" class="form-control" name="link" value="{{ $link->link }}">
                             </div>

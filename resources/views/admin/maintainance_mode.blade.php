@@ -46,6 +46,10 @@
                                 <label for="">{{__('admin.Description')}}</label>
                                 <textarea name="description" id="" cols="30" rows="10" class="form-control text-area-5">{{ $maintainance->description }}</textarea>
                             </div>
+                            <div class="form-group">
+                                <label for="">{{__('admin.Description')}} AR</label>
+                                <textarea name="description_ar" id="" cols="30" rows="10" class="form-control text-area-5">{{ $maintainance->description_ar }}</textarea>
+                            </div>
 
                             <button class="btn btn-primary" type="submit">{{__('admin.Update')}}</button>
                         </form>

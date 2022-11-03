@@ -90,9 +90,12 @@ class ContactPageController extends Controller
         $contact->email = $request->email;
         $contact->phone = $request->phone;
         $contact->address = $request->address;
+        $contact->address_ar = $request->address_ar;
         $contact->title = $request->title;
+        $contact->title_ar = $request->title_ar;
         $contact->map = $request->google_map;
         $contact->description = $request->description;
+        $contact->description_ar = $request->description_ar;
         $contact->save();
 
         $notification = trans('admin_validation.Updated Successfully');

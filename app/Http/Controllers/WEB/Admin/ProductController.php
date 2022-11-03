@@ -26,6 +26,8 @@ use App\Models\CompareProduct;
 use Image;
 use File;
 use Str;
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
 class ProductController extends Controller
 {
     public function __construct()
@@ -76,6 +78,7 @@ class ProductController extends Controller
         $brands = Brand::all();
         $specificationKeys = ProductSpecificationKey::all();
 
+
         return view('admin.create_product',compact('categories','brands','specificationKeys'));
     }
 
@@ -112,6 +115,8 @@ class ProductController extends Controller
         ];
         $this->validate($request, $rules,$customMessages);
 
+        $tr = new GoogleTranslate('ar');
+
         $product = new Product();
         if($request->thumb_image){
             $extention = $request->thumb_image->getClientOriginalExtension();
@@ -121,6 +126,11 @@ class ProductController extends Controller
                 ->save(public_path().'/'.$image_name);
             $product->thumb_image=$image_name;
         }
+
+        $product->name_ar = $tr->translate($request->name);
+        $product->short_name_ar = $tr->translate($request->short_name);
+        $product->short_description_ar = $tr->translate(strip_tags($request->short_description));
+        $product->long_description_ar = $tr->translate(strip_tags($request->long_description));
 
         $product->short_name = $request->short_name;
         $product->name = $request->name;
@@ -250,6 +260,11 @@ class ProductController extends Controller
         }
 
 
+        $product->name_ar = $request->name_ar;
+        $product->short_name_ar = $request->short_name_ar;
+        $product->short_description_ar = $request->short_description_ar;
+        $product->long_description_ar = $request->long_description_ar;
+        
         $product->short_name = $request->short_name;
         $product->name = $request->name;
         $product->slug = $request->slug;

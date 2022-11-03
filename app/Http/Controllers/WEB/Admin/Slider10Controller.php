@@ -8,6 +8,7 @@ use App\Models\Slider10;
 use App\Models\Product;
 use Image;
 use File;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 class Slider10Controller extends Controller
 {
     public function __construct()
@@ -26,6 +27,7 @@ class Slider10Controller extends Controller
     }
 
     public function store(Request $request){
+        $tr = new GoogleTranslate('ar');
         $rules = [
             'slider_image' => 'required',
             'product_slug' => 'required',
@@ -56,6 +58,10 @@ class Slider10Controller extends Controller
             $slider->image = $slider_image;
         }
 
+
+        $slider->badge_ar = $tr->translate($request->badge);
+        $slider->title_one_ar = $tr->translate($request->title_one);
+        $slider->title_two_ar = $tr->translate($request->title_two);
 
         $slider->product_slug = $request->product_slug;
         $slider->serial = $request->serial;
@@ -113,6 +119,9 @@ class Slider10Controller extends Controller
             }
         }
 
+        $slider->badge_ar = $request->badge_ar;
+        $slider->title_one_ar = $request->title_one_ar;
+        $slider->title_two_ar = $request->title_two_ar;
         $slider->product_slug = $request->product_slug;
         $slider->serial = $request->serial;
         $slider->status = $request->status;

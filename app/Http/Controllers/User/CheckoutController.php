@@ -208,7 +208,7 @@ class CheckoutController extends Controller
         
         // calling the method and printing results
         try {
-            $auth_call = $soapClient->FetchCountries($params);
+            $auth_call = $soapClient->FetchCities('AE');
 
             echo '<pre>';
             return $auth_call;

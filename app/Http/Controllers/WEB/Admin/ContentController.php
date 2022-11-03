@@ -12,6 +12,8 @@ use App\Models\ShopPage;
 use App\Models\SeoSetting;
 use Image;
 use File;
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
 class ContentController extends Controller
 {
     public function __construct()
@@ -56,6 +58,7 @@ class ContentController extends Controller
         }
         $maintainance->status = $request->maintainance_mode ? 1 : 0;
         $maintainance->description = $request->description;
+        $maintainance->description_ar = $request->description_ar;
         $maintainance->save();
 
         $notification= trans('admin_validation.Updated Successfully');
@@ -100,6 +103,7 @@ class ContentController extends Controller
                 if(File::exists(public_path().'/'.$old_image))unlink(public_path().'/'.$old_image);
             }
         }
+        $announcement->description_ar = $request->description_ar;
         $announcement->description = $request->description;
         $announcement->title = $request->title;
         $announcement->expired_date = $request->expired_date;
@@ -209,8 +213,20 @@ class ContentController extends Controller
             'seo_description.required' => trans('admin_validation.Seo description is required'),
         ];
         $this->validate($request, $rules,$customMessages);
+        $tr = new GoogleTranslate('ar');
 
         $page = SeoSetting::find($id);
+        if(!$request->seo_title_ar || $request->seo_title == '')
+            $page->seo_title_ar = $tr->translate($request->seo_title);
+        else
+            $page->seo_title_ar = $request->seo_title_ar;
+
+        if(!$request->seo_description_ar || $request->seo_description == '')
+            $page->seo_description_ar = $tr->translate($request->seo_description);
+        else
+            $page->seo_description_ar = $request->seo_description_ar;
+
+
         $page->seo_title = $request->seo_title;
         $page->seo_description = $request->seo_description;
         $page->save();
@@ -268,11 +284,14 @@ class ContentController extends Controller
     }
 
     public function sellerCondition(){
+
         $setting = Setting::select('seller_condition')->first();
         return view('admin.seller_condition', compact('setting'));
     }
 
     public function updatesellerCondition(Request $request){
+        $tr = new GoogleTranslate('ar');
+
         $rules = [
             'terms_and_condition' => 'required'
         ];
@@ -282,15 +301,19 @@ class ContentController extends Controller
         $this->validate($request, $rules,$customMessages);
 
         $setting = Setting::first();
+            // $setting->seller_condition_ar = $tr->translate(strip_tags($request->terms_and_condition));
+        $setting->seller_condition_ar = $request->terms_and_condition_ar;
+        
         $setting->seller_condition = $request->terms_and_condition;
         $setting->save();
+
         $notification = trans('admin_validation.Update Successfully');
         $notification=array('messege'=>$notification,'alert-type'=>'success');
         return redirect()->back()->with($notification);
     }
 
     public function subscriptionBanner(){
-        $subscription_banner = BannerImage::select('id','image','banner_location','header','title')->find(27);
+        $subscription_banner = BannerImage::select('id','image','banner_location','header','title','title_ar','header_ar')->find(27);
         return view('admin.subscription_banner', compact('subscription_banner'));
     }
 
@@ -319,6 +342,8 @@ class ContentController extends Controller
                 if(File::exists(public_path().'/'.$existing_banner))unlink(public_path().'/'.$existing_banner);
             }
         }
+        $subscription_banner->title_ar = $request->title_ar;
+        $subscription_banner->header_ar = $request->header_ar;
         $subscription_banner->title = $request->title;
         $subscription_banner->header = $request->header;
         $subscription_banner->save();

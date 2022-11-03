@@ -52,24 +52,36 @@
                                     <label>{{__('First Column Title')}} <span class="text-danger">*</span></label>
                                     <input type="text" name="first_column" class="form-control" value="{{ $footer->first_column }}">
                                 </div>
-
+                                <div class="form-group col-12">
+                                    <label>{{__('First Column Title')}} AR<span class="text-danger">*</span></label>
+                                    <input type="text" name="first_column_ar" class="form-control" value="{{ $footer->first_column_ar }}">
+                                </div>
                                 <div class="form-group col-12">
                                     <label>{{__('Second Column Title')}} <span class="text-danger">*</span></label>
                                     <input type="text" name="second_column" class="form-control" value="{{ $footer->second_column }}">
                                 </div>
-
+                                <div class="form-group col-12">
+                                    <label>{{__('Second Column Title')}} AR<span class="text-danger">*</span></label>
+                                    <input type="text" name="second_column_ar" class="form-control" value="{{ $footer->second_column_ar }}">
+                                </div>
                                 <div class="form-group col-12">
                                     <label>{{__('Third Column Title')}} <span class="text-danger">*</span></label>
                                     <input type="text" name="third_column" class="form-control" value="{{ $footer->third_column }}">
                                 </div>
-
-
+                                <div class="form-group col-12">
+                                    <label>{{__('Third Column Title')}} AR<span class="text-danger">*</span></label>
+                                    <input type="text" name="third_column_ar" class="form-control" value="{{ $footer->third_column_ar }}">
+                                </div>
 
 
 
                                 <div class="form-group col-12">
                                     <label>{{__('admin.Copyright')}} <span class="text-danger">*</span></label>
                                     <input type="text" name="copyright" class="form-control" value="{{ $footer->copyright }}">
+                                </div>
+                                <div class="form-group col-12">
+                                    <label>{{__('admin.Copyright')}} AR<span class="text-danger">*</span></label>
+                                    <input type="text" name="copyright_ar" class="form-control" value="{{ $footer->copyright_ar }}">
                                 </div>
                             </div>
                             <div class="row">

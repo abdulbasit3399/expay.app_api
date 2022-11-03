@@ -38,6 +38,7 @@ class TermsAndConditionController extends Controller
 
         $termsAndCondition = new TermsAndCondition();
 
+        $termsAndCondition->terms_and_condition_ar = $request->terms_and_condition_ar;
         $termsAndCondition->terms_and_condition = $request->terms_and_condition;
         $termsAndCondition->save();
 
@@ -59,6 +60,7 @@ class TermsAndConditionController extends Controller
         ];
         $this->validate($request, $rules,$customMessages);
 
+        $termsAndCondition->terms_and_condition_ar = $request->terms_and_condition_ar;
         $termsAndCondition->terms_and_condition = $request->terms_and_condition;
         $termsAndCondition->save();
 

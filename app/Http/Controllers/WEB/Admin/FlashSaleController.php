@@ -9,6 +9,7 @@ use App\Models\FlashSaleProduct;
 use App\Models\Product;
 use Image;
 use File;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class FlashSaleController extends Controller
 {
@@ -38,8 +39,16 @@ class FlashSaleController extends Controller
             'status.required' => trans('Status is required'),
         ];
         $this->validate($request, $rules,$customMessages);
+        $tr = new GoogleTranslate('ar');
 
         $flash_sale = FlashSale::first();
+
+        if(!$request->title_ar || $request->title_ar == '')
+            $flash_sale->title_ar = $tr->translate($request->title);
+        else
+            $flash_sale->title_ar = $request->title_ar;
+
+        
         $flash_sale->title = $request->title;
         $flash_sale->offer = $request->offer;
         $flash_sale->end_time = $request->end_time;
@@ -81,7 +90,7 @@ class FlashSaleController extends Controller
     public function flash_sale_product(){
         $products = Product::where('status',1)->get();
         $flash_sale_products = FlashSaleProduct::with('product')->get();
-
+        dd('h');
         return view('admin.flashsale_product', compact('flash_sale_products','products'));
     }
 

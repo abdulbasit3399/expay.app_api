@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Footer;
 use Image;
 use File;
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
 class FooterController extends Controller
 {
     public function __construct()
@@ -20,6 +22,7 @@ class FooterController extends Controller
     }
 
     public function update(Request $request, $id){
+        $tr = new GoogleTranslate('ar');
         $rules = [
             'email' =>'required',
             'phone' =>'required',
@@ -48,6 +51,28 @@ class FooterController extends Controller
         $footer->first_column = $request->first_column;
         $footer->second_column = $request->second_column;
         $footer->third_column = $request->third_column;
+
+        if(!$footer->copyright_ar)
+            $footer->copyright_ar = $tr->translate($request->copyright);
+        else
+            $footer->copyright_ar = $request->copyright_ar;
+
+        if(!$footer->first_column_ar)
+            $footer->first_column_ar = $tr->translate($request->first_column);
+        else
+            $footer->first_column_ar = $request->first_column_ar;
+        
+        if(!$footer->second_column_ar)
+            $footer->second_column_ar = $tr->translate($request->second_column);
+        else
+            $footer->second_column_ar = $request->second_column_ar;
+
+        if(!$footer->third_column_ar)
+            $footer->third_column_ar = $tr->translate($request->third_column);
+        else
+            $footer->third_column_ar = $request->third_column_ar;
+        
+
         $footer->save();
         if($request->card_image){
             $old_logo=$footer->payment_image;

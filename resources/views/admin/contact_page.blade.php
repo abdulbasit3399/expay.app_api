@@ -39,17 +39,26 @@
                                         <label>{{__('admin.Address')}} <span class="text-danger">*</span></label>
                                         <input type="text" name="address" class="form-control" value="{{ $contact->address }}">
                                     </div>
-
+                                    <div class="form-group col-12">
+                                        <label>{{__('admin.Address')}} AR<span class="text-danger">*</span></label>
+                                        <input type="text" name="address_ar" class="form-control" value="{{ $contact->address_ar }}">
+                                    </div>
                                     <div class="form-group col-12">
                                         <label>{{__('admin.Title')}} <span class="text-danger">*</span></label>
                                         <input type="text" name="title" class="form-control" value="{{ $contact->title }}">
                                     </div>
-
+                                    <div class="form-group col-12">
+                                        <label>{{__('admin.Title')}} AR<span class="text-danger">*</span></label>
+                                        <input type="text" name="title_ar" class="form-control" value="{{ $contact->title_ar }}">
+                                    </div>
                                     <div class="form-group col-12">
                                         <label>{{__('admin.Description')}} <span class="text-danger">*</span></label>
                                         <textarea name="description" cols="30" rows="10" class="form-control text-area-5">{{ $contact->description }}</textarea>
                                     </div>
-
+                                    <div class="form-group col-12">
+                                        <label>{{__('admin.Description')}} AR<span class="text-danger">*</span></label>
+                                        <textarea name="description_ar" cols="30" rows="10" class="form-control text-area-5">{{ $contact->description_ar }}</textarea>
+                                    </div>
                                     <div class="form-group col-12">
                                         <label>{{__('admin.Google Map')}} <span class="text-danger">*</span></label>
                                         <textarea name="google_map" cols="30" rows="10" class="form-control text-area-5">{{ $contact->map }}</textarea>

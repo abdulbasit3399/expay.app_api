@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use  Image;
 use File;
 use Str;
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
 class ProductBrandController extends Controller
 {
 
@@ -46,6 +48,7 @@ class ProductBrandController extends Controller
             'logo.required' => trans('admin_validation.Logo is required'),
         ];
         $this->validate($request, $rules,$customMessages);
+        $tr = new GoogleTranslate('ar');
 
         $brand = new Brand();
         if($request->logo){
@@ -56,6 +59,7 @@ class ProductBrandController extends Controller
                 ->save(public_path().'/'.$logo_name);
             $brand->logo=$logo_name;
         }
+        $brand->name_ar = $tr->translate($request->name);
         $brand->name = $request->name;
         $brand->slug = $request->slug;
         $brand->status = $request->status;
@@ -112,6 +116,7 @@ class ProductBrandController extends Controller
             }
         }
 
+        $brand->name_ar = $request->name_ar;
         $brand->name = $request->name;
         $brand->slug = $request->slug;
         $brand->status = $request->status;

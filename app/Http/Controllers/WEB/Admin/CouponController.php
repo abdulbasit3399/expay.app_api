@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Coupon;
 use App\Models\Setting;
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
 class CouponController extends Controller
 {
     public function __construct()
@@ -42,9 +44,11 @@ class CouponController extends Controller
             'expired_date.required' => trans('admin_validation.Expired date is required'),
         ];
         $this->validate($request, $rules,$customMessages);
+        $tr = new GoogleTranslate('ar');
 
         $coupon = new Coupon();
         $coupon->name = $request->name;
+        $coupon->name_ar = $tr->translate($request->name);
         $coupon->code = $request->code;
         $coupon->max_quantity = $request->number_of_time;
         $coupon->expired_date = $request->expired_date;
@@ -83,6 +87,7 @@ class CouponController extends Controller
 
         $coupon = Coupon::find($id);
         $coupon->name = $request->name;
+        $coupon->name_ar = $request->name_ar;
         $coupon->code = $request->code;
         $coupon->max_quantity = $request->number_of_time;
         $coupon->offer_type = $request->offer_type;

@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\FooterLink;
 use App\Models\Footer;
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
 class FooterLinkController extends Controller
 {
     public function __construct()
@@ -46,6 +48,7 @@ class FooterLinkController extends Controller
 
 
     public function store(Request $request){
+        $tr = new GoogleTranslate('ar');
         $rules = [
             'link' =>'required',
             'name' =>'required',
@@ -60,7 +63,9 @@ class FooterLinkController extends Controller
 
         $link = new FooterLink();
         $link->link = $request->link;
+        $link->title_ar = $tr->translate($request->name);
         $link->title = $request->name;
+
         $link->column = $request->column;
         $link->save();
 
@@ -88,6 +93,7 @@ class FooterLinkController extends Controller
         $link = FooterLink::find($id);
         $link->link = $request->link;
         $link->title = $request->name;
+        $link->title_ar = $request->name_ar;
         $link->save();
 
         $notification= trans('admin_validation.Update Successfully');

@@ -50,6 +50,12 @@
                                     <label>{{__('admin.Child Category Name')}} <span class="text-danger">*</span></label>
                                     <input type="text" id="name" class="form-control"  name="name" value="{{ $childCategory->name }}">
                                 </div>
+
+                                <div class="form-group col-12">
+                                    <label>{{__('admin.Child Category Name')}} AR<span class="text-danger">*</span></label>
+                                    <input type="text" id="name_ar" class="form-control"  name="name_ar" value="{{ $childCategory->name_ar }}">
+                                </div>
+
                                 <div class="form-group col-12">
                                     <label>{{__('admin.Slug')}} <span class="text-danger">*</span></label>
                                     <input type="text" id="slug" class="form-control"  name="slug" value="{{ $childCategory->slug }}">

@@ -17,6 +17,10 @@
             <label>{{__('Shipping Rule')}} <span class="text-danger">*</span></label>
             <input type="text" id="shipping_rule" class="form-control"  name="shipping_rule" autocomplete="off" value="{{ $shipping->shipping_rule }}">
         </div>
+        <div class="form-group col-12">
+            <label>{{__('Shipping Rule')}} AR<span class="text-danger">*</span></label>
+            <input type="text" id="shipping_rule_ar" class="form-control"  name="shipping_rule_ar" autocomplete="off" value="{{ $shipping->shipping_rule_ar }}">
+        </div>
 
         <div class="form-group col-12">
             <label>{{__('Type')}} <span class="text-danger">*</span></label>

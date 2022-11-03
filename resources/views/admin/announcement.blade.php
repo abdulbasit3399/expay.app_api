@@ -50,7 +50,10 @@
                                 <label for="">{{__('admin.Description')}}</label>
                                 <textarea name="description" id="" cols="30" rows="10" class="form-control text-area-5">{{ $announcement->description }}</textarea>
                             </div>
-
+                            <div class="form-group">
+                                <label for="">{{__('admin.Description')}} AR</label>
+                                <textarea name="description_ar" id="" cols="30" rows="10" class="form-control text-area-5">{{ $announcement->description_ar }}</textarea>
+                            </div>
 
                             <div class="form-group">
                                 <label for="">{{__('admin.Session Expired Date Quantity')}}</label>

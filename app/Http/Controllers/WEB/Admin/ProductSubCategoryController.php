@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WEB\Admin;
 use Image;
 use File;
 use App\Http\Controllers\Controller;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 use App\Models\SubCategory;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -35,6 +36,7 @@ class ProductSubCategoryController extends Controller
 
     public function store(Request $request)
     {
+        $tr = new GoogleTranslate('ar');
         $rules = [
             'name'=>'required',
             'slug'=>'required|unique:sub_categories',
@@ -54,6 +56,7 @@ class ProductSubCategoryController extends Controller
 
         $subCategory = new SubCategory();
         $subCategory->category_id = $request->category;
+        $subCategory->name_ar = $tr->translate($request->name);
         $subCategory->name = $request->name;
         $subCategory->slug = $request->slug;
         $subCategory->status = $request->status;
@@ -107,6 +110,7 @@ class ProductSubCategoryController extends Controller
 
         $subCategory->category_id = $request->category;
         $subCategory->name = $request->name;
+        $subCategory->name_ar = $request->name_ar;
         $subCategory->slug = $request->slug;
         $subCategory->status = $request->status;
 

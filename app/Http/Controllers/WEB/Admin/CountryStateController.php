@@ -10,6 +10,8 @@ use App\Models\Country;
 use App\Models\BillingAddress;
 use App\Models\ShippingAddress;
 use App\Models\User;
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
 class CountryStateController extends Controller
 {
     public function __construct()
@@ -44,9 +46,12 @@ class CountryStateController extends Controller
         ];
         $this->validate($request, $rules,$customMessages);
 
+        $tr = new GoogleTranslate('ar');
+
         $state=new CountryState();
         $state->country_id=$request->country;
         $state->name=$request->name;
+        $state->name_ar = $tr->translate($request->name);
         $state->slug=Str::slug($request->name);
         $state->status=$request->status;
         $state->save();
@@ -89,6 +94,7 @@ class CountryStateController extends Controller
 
         $state->country_id=$request->country;
         $state->name=$request->name;
+        $state->name_ar=$request->name_ar;
         $state->slug=Str::slug($request->name);
         $state->status=$request->status;
         $state->save();

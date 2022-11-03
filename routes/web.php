@@ -269,6 +269,7 @@ Route::group(['middleware' => ['maintainance']], function () {
 });
 
 // start admin routes
+Route::group(['prefix' => LaravelLocalization::setLocale()], function(){
 Route::group(['as'=> 'admin.', 'prefix' => 'admin'],function (){
 
     // start auth route
@@ -665,6 +666,7 @@ Route::group(['as'=> 'admin.', 'prefix' => 'admin'],function (){
     Route::post('update-validation-language', [LanguageController::class, 'updateValidationLanguage'])->name('update-validation-language');
 
 
+});
 });
 
 });

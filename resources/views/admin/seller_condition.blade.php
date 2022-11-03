@@ -28,6 +28,10 @@
                                     <textarea name="terms_and_condition" cols="30" rows="10" class="summernote">{{ $setting->seller_condition }}</textarea>
                                 </div>
 
+                                <div class="form-group col-12">
+                                    <label>{{__('admin.Terms And Conditions')}} AR<span class="text-danger">*</span></label>
+                                    <textarea name="terms_and_condition_ar" cols="30" rows="10" class="summernote">{{ $setting->seller_condition_ar }}</textarea>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">

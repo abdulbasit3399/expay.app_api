@@ -43,7 +43,9 @@ class EmailTemplateController extends Controller
         $template = EmailTemplate::find($id);
         if($template){
             $template->subject = $request->subject;
+            $template->subject_ar = $request->subject_ar;
             $template->description = $request->description;
+            $template->description_ar = $request->description_ar;
             $template->save();
             $notification= trans('admin_validation.Updated Successfully');
             $notification = array('messege'=>$notification,'alert-type'=>'success');
