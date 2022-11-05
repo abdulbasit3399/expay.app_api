@@ -40,7 +40,6 @@ class ProductController extends Controller
         $products = Product::with('category','seller','brand')->where(['vendor_id' => 0])->orderBy('id','desc')->get();
         $orderProducts = OrderProduct::all();
         $setting = Setting::first();
-
         return view('admin.product',compact('products','orderProducts','setting'));
     }
 
@@ -84,6 +83,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+
         $rules = [
             'short_name' => 'required',
             'name' => 'required',
@@ -158,20 +158,22 @@ class ProductController extends Controller
         $product->approve_by_admin = 1;
         $product->save();
 
+
         if($request->is_specification){
             $exist_specifications=[];
             if($request->keys){
                 foreach($request->keys as $index => $key){
                     if($key){
                         if($request->specifications[$index]){
-                            if(!in_array($key, $exist_specifications)){
+                            // if(!in_array($key, $exist_specifications)){
                                 $productSpecification= new ProductSpecification();
                                 $productSpecification->product_id = $product->id;
                                 $productSpecification->product_specification_key_id = $key;
                                 $productSpecification->specification = $request->specifications[$index];
+                                $productSpecification->specification_ar = $tr->translate($request->specifications[$index]);
                                 $productSpecification->save();
-                            }
-                            $exist_specifications[] = $key;
+                            // }
+                            // $exist_specifications[] = $key;
                         }
                     }
                 }
@@ -294,25 +296,18 @@ class ProductController extends Controller
         }
         $product->save();
 
-        $exist_specifications=[];
+        $existSroductSpecification = ProductSpecification::where('product_id',$product->id)->delete();
         if($request->keys){
             foreach($request->keys as $index => $key){
                 if($key){
                     if($request->specifications[$index]){
-                        if(!in_array($key, $exist_specifications)){
-                            $existSroductSpecification = ProductSpecification::where(['product_id' => $product->id,'product_specification_key_id' => $key])->first();
-                            if($existSroductSpecification){
-                                $existSroductSpecification->specification = $request->specifications[$index];
-                                $existSroductSpecification->save();
-                            }else{
-                                $productSpecification = new ProductSpecification();
-                                $productSpecification->product_id = $product->id;
-                                $productSpecification->product_specification_key_id = $key;
-                                $productSpecification->specification = $request->specifications[$index];
-                                $productSpecification->save();
-                            }
-                        }
-                        $exist_specifications[] = $key;
+                        $productSpecification = new ProductSpecification();
+                        $productSpecification->product_id = $product->id;
+                        $productSpecification->product_specification_key_id = $key;
+                        $productSpecification->specification = $request->specifications[$index];
+                        $productSpecification->save();
+
+
                     }
                 }
             }

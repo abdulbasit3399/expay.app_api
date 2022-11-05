@@ -105,8 +105,6 @@ Route::group([
 });
 
 
-
-
 Route::group(['middleware' => ['demo','XSS']], function () {
 
 Route::group(['middleware' => ['maintainance']], function () {
@@ -121,6 +119,7 @@ Route::group(['middleware' => ['maintainance']], function () {
     Route::get('/child-category/{id}', [HomeController::class, 'childCategory'])->name('child-category');
 
     Route::get('/product-by-category/{id}', [HomeController::class, 'productByCategory'])->name('product-by-category');
+    Route::post('/product-filter', [HomeController::class, 'product_filter'])->name('product-filter');
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/about-us', [HomeController::class, 'aboutUs'])->name('about-us');

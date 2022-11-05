@@ -5,7 +5,7 @@ namespace App\Http\Controllers\WEB\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Slider9;
-use App\Models\Product;
+use App\Models\Brand;
 use Image;
 use File;
 use Stichoza\GoogleTranslate\GoogleTranslate;
@@ -22,7 +22,7 @@ class Slider9Controller extends Controller
     }
 
     public function create(){
-        $products = Product::where(['status' => 1])->select('id','name','slug')->get();
+        $products = Brand::where(['status' => 1])->select('id','name','slug')->get();
         return view('admin.slider9.create_slider', compact('products'));
     }
 
@@ -33,9 +33,9 @@ class Slider9Controller extends Controller
             'product_slug' => 'required',
             'status' => 'required',
             'serial' => 'required',
-            'title_one' => 'required',
-            'title_two' => 'required',
-            'badge' => 'required',
+            // 'title_one' => 'required',
+            // 'title_two' => 'required',
+            // 'badge' => 'required',
         ];
         $customMessages = [
             'slider_image.required' => trans('admin_validation.Slider image is required'),
@@ -57,11 +57,19 @@ class Slider9Controller extends Controller
                 ->save(public_path().'/'.$slider_image);
             $slider->image = $slider_image;
         }
+        if($request->slider_image_ar){
+            $extention = $request->slider_image_ar->getClientOriginalExtension();
+            $slider_image = 'slider'.date('-Y-m-d-h-i-s-').rand(999,9999).'.'.$extention;
+            $slider_image = 'uploads/custom-images/'.$slider_image;
+            Image::make($request->slider_image_ar)
+                ->save(public_path().'/'.$slider_image);
+            $slider->image_ar = $slider_image;
+        }
 
 
-        $slider->badge_ar = $tr->translate($request->badge);
-        $slider->title_one_ar = $tr->translate($request->title_one);
-        $slider->title_two_ar = $tr->translate($request->title_two);
+        $slider->badge_ar = $request->badge ? $tr->translate($request->badge):'';
+        $slider->title_one_ar = $request->title_one ? $tr->translate($request->title_one) : '';
+        $slider->title_two_ar = $request->title_two ? $tr->translate($request->title_two) : '';
 
         $slider->product_slug = $request->product_slug;
         $slider->serial = $request->serial;
@@ -83,7 +91,7 @@ class Slider9Controller extends Controller
 
     public function edit($id){
         $slider = Slider9::find($id);
-        $products = Product::where(['status' => 1])->select('id','name','slug')->get();
+        $products = Brand::where(['status' => 1])->select('id','name','slug')->get();
         return view('admin.slider9.edit_slider', compact('slider','products'));
     }
 
@@ -92,9 +100,9 @@ class Slider9Controller extends Controller
             'product_slug' => 'required',
             'status' => 'required',
             'serial' => 'required',
-            'title_one' => 'required',
-            'title_two' => 'required',
-            'badge' => 'required',
+            // 'title_one' => 'required',
+            // 'title_two' => 'required',
+            // 'badge' => 'required',
 
         ];
         $customMessages = [
@@ -113,6 +121,19 @@ class Slider9Controller extends Controller
             Image::make($request->slider_image)
                 ->save(public_path().'/'.$slider_image);
             $slider->image = $slider_image;
+            $slider->save();
+            if($existing_slider){
+                if(File::exists(public_path().'/'.$existing_slider))unlink(public_path().'/'.$existing_slider);
+            }
+        }
+        if($request->slider_image_ar){
+            $existing_slider = $slider->image_ar;
+            $extention = $request->slider_image_ar->getClientOriginalExtension();
+            $slider_image = 'slider'.date('-Y-m-d-h-i-s-').rand(999,9999).'.'.$extention;
+            $slider_image = 'uploads/custom-images/'.$slider_image;
+            Image::make($request->slider_image_ar)
+                ->save(public_path().'/'.$slider_image);
+            $slider->image_ar = $slider_image;
             $slider->save();
             if($existing_slider){
                 if(File::exists(public_path().'/'.$existing_slider))unlink(public_path().'/'.$existing_slider);

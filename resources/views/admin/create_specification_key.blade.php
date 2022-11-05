@@ -28,6 +28,10 @@
                                     <input type="text" id="key" class="form-control"  name="key">
                                 </div>
                                 <div class="form-group col-12">
+                                    <label>{{__('admin.Key')}} AR<span class="text-danger">*</span></label>
+                                    <input type="text" id="key_ar" class="form-control"  name="key_ar">
+                                </div>
+                                <div class="form-group col-12">
                                     <label>{{__('admin.Status')}} <span class="text-danger">*</span></label>
                                     <select name="status" class="form-control">
                                         <option value="1">{{__('admin.Active')}}</option>

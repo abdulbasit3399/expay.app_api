@@ -29,11 +29,13 @@
                         <table class="table table-striped" id="dataTable">
                             <thead>
                                 <tr>
-                                    <th width="10%">{{__('admin.SN')}}</th>
+                                    <th width="5%">{{__('admin.SN')}}</th>
                                     <th width="10%">{{__('admin.Varriant')}}</th>
+                                    <th width="10%">{{__('admin.Varriant')}} AR</th>
                                     <th width="10%">{{__('admin.Item')}}</th>
+                                    <th width="10%">{{__('admin.Item')}}AR</th>
                                     <th width="10%">{{__('admin.Price')}}</th>
-                                    <th width="10%">{{__('admin.Action')}}</th>
+                                    <th width="5%">{{__('admin.Action')}}</th>
                                   </tr>
                             </thead>
                             <tbody>
@@ -41,7 +43,9 @@
                                     <tr>
                                         <td>{{ ++$index }}</td>
                                         <td>{{ $variantItem->variant->name }}</td>
+                                        <td>{{ $variantItem->variant->name_ar }}</td>
                                         <td>{{ $variantItem->name }}</td>
+                                        <td>{{ $variantItem->name_ar }}</td>
                                         <td>{{ $setting->currency_icon }}{{ $variantItem->price }}</td>
 
                                         <td>
@@ -145,7 +149,10 @@
                                         <label>{{__('admin.Item Name')}} <span class="text-danger">*</span></label>
                                         <input type="text" id="name" class="form-control"  name="name" value="{{ $variantItem->name }}">
                                     </div>
-
+                                    <div class="form-group col-12">
+                                        <label>{{__('admin.Item Name')}} AR<span class="text-danger">*</span></label>
+                                        <input type="text" id="name_ar" class="form-control"  name="name_ar" value="{{ $variantItem->name_ar }}">
+                                    </div>
                                     <div class="form-group col-12">
                                         <label>{{__('admin.Price')}} <span>({{__('admin.Set 0 to make it free')}})</span> <span class="text-danger">*</span></label>
                                         <input type="text" id="price" class="form-control"  name="price" value="{{ $variantItem->price }}">

@@ -9,6 +9,7 @@ use App\Models\ProductVariant;
 use App\Models\Product;
 use App\Models\Setting;
 use App\Models\ShoppingCartVariant;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 class ProductVariantItemController extends Controller
 {
     public function __construct()
@@ -40,6 +41,7 @@ class ProductVariantItemController extends Controller
 
     public function store(Request $request)
     {
+        $tr = new GoogleTranslate('ar');
         $variantItems = ProductVariantItem::where(['product_id' => $request->product_id , 'product_variant_id' => $request->variant_id])->count();
 
         $rules = [
@@ -70,8 +72,10 @@ class ProductVariantItemController extends Controller
                             $variantItem->product_id = $request->product_id;
                             $variantItem->product_variant_id = $request->variant_id;
                             $variantItem->name = $request->name;
+                            $variantItem->name_ar = $tr->translate($request->name);
                             $variantItem->price = $request->price;
                             $variantItem->product_variant_name = $variant->name;
+                            $variantItem->product_variant_name_ar = $tr->translate($request->name);
                             $variantItem->status = $request->status;
                             $variantItem->save();
 
@@ -114,6 +118,7 @@ class ProductVariantItemController extends Controller
                             $variantItem->product_id = $request->product_id;
                             $variantItem->product_variant_id = $request->variant_id;
                             $variantItem->name = $request->name;
+                            $variantItem->name_ar = $request->name_ar;
                             $variantItem->price = $request->price;
                             $variantItem->status = $request->status;
                             $variantItem->save();

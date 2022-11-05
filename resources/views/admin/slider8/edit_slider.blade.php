@@ -37,36 +37,48 @@
                                 </div>
 
                                 <div class="form-group col-12">
-                                    <label>{{__('Badge')}} <span class="text-danger">*</span></label>
+                                    <label>{{__('admin.Current Slider')}} AR</label>
+                                    <div>
+                                        <img src="{{ asset($slider->image_ar) }}" alt="" width="200px">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-12">
+                                    <label>{{__('admin.New Slider')}} AR</label>
+                                    <input type="file" name="slider_image_ar" class="form-control-file">
+                                </div>
+
+                                <div class="form-group col-12">
+                                    <label>{{__('Badge')}}</label>
                                     <input type="text" name="badge" class="form-control" value="{{ $slider->badge }}">
                                 </div>
                                 <div class="form-group col-12">
-                                    <label>{{__('Badge')}} AR<span class="text-danger">*</span></label>
+                                    <label>{{__('Badge')}} AR</label>
                                     <input type="text" name="badge_ar" class="form-control" value="{{ $slider->badge_ar }}">
                                 </div>
 
                                 <div class="form-group col-12">
-                                    <label>{{__('Title One')}} <span class="text-danger">*</span></label>
+                                    <label>{{__('Title One')}}</label>
                                     <input type="text" name="title_one" class="form-control" value="{{ $slider->title_one }}">
                                 </div>
                                 <div class="form-group col-12">
-                                    <label>{{__('Title One')}} AR<span class="text-danger">*</span></label>
+                                    <label>{{__('Title One')}} AR</label>
                                     <input type="text" name="title_one_ar" class="form-control" value="{{ $slider->title_one_ar }}">
                                 </div>
 
                                 <div class="form-group col-12">
-                                    <label>{{__('Title Two')}} <span class="text-danger">*</span></label>
+                                    <label>{{__('Title Two')}}</label>
                                     <input type="text" name="title_two" class="form-control" value="{{ $slider->title_two }}">
                                 </div>
                                 <div class="form-group col-12">
-                                    <label>{{__('Title Two')}} AR<span class="text-danger">*</span></label>
+                                    <label>{{__('Title Two')}} AR</label>
                                     <input type="text" name="title_two_ar" class="form-control" value="{{ $slider->title_two_ar }}">
                                 </div>
 
                                 <div class="form-group col-12">
-                                    <label>{{__('Product Link')}} <span class="text-danger">*</span></label>
+                                    <label>{{__('Brand Link')}} <span class="text-danger">*</span></label>
                                     <select name="product_slug" id="" class="form-control select2">
-                                        <option value="">{{__('Select Product')}}</option>
+                                        <option value="">{{__('Select Brand')}}</option>
                                         @foreach ($products as $product)
                                             <option {{ $slider->product_slug == $product->slug ? 'selected' : '' }} value="{{ $product->slug }}">{{ $product->name }}</option>
                                         @endforeach

@@ -25,6 +25,17 @@
                             @method('PUT')
                             <div class="row">
                                 <div class="form-group col-12">
+                                    <label>{{__('admin.Current')}}{{__('admin.Image')}}</label>
+                                    <div>
+                                        <img src="{{ asset($category->image) }}" alt="" width="200px">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-12">
+                                    <label>{{__('admin.Category')}} {{__('admin.Image')}}</label>
+                                    <input type="file" name="category_image" class="form-control-file">
+                                </div>
+                                <div class="form-group col-12">
                                     <label>{{__('admin.Icon')}} <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control custom-icon-picker"  name="icon" value="{{ $category->icon }}">
                                 </div>

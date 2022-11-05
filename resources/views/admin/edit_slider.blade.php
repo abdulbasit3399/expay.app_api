@@ -37,6 +37,18 @@
                                 </div>
 
                                 <div class="form-group col-12">
+                                    <label>{{__('admin.Current Slider')}} AR</label>
+                                    <div>
+                                        <img src="{{ asset($slider->image_ar) }}" alt="" width="200px">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-12">
+                                    <label>{{__('admin.New Slider')}} AR</label>
+                                    <input type="file" name="slider_image_ar" class="form-control-file">
+                                </div>
+                                
+                                <div class="form-group col-12">
                                     <label>{{__('Badge')}} <span class="text-danger">*</span></label>
                                     <input type="text" name="badge" class="form-control" value="{{ $slider->badge }}">
                                 </div>
@@ -64,7 +76,7 @@
                                 </div>
 
                                 <div class="form-group col-12">
-                                    <label>{{__('Product Link')}} <span class="text-danger">*</span></label>
+                                    <label>{{__('Brand Link')}} <span class="text-danger">*</span></label>
                                     <select name="product_slug" id="" class="form-control select2">
                                         <option value="">{{__('Select Product')}}</option>
                                         @foreach ($products as $product)

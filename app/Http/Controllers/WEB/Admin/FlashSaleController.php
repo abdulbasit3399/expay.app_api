@@ -90,7 +90,6 @@ class FlashSaleController extends Controller
     public function flash_sale_product(){
         $products = Product::where('status',1)->get();
         $flash_sale_products = FlashSaleProduct::with('product')->get();
-        dd('h');
         return view('admin.flashsale_product', compact('flash_sale_products','products'));
     }
 

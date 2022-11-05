@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\ProductVariantItem;
 use App\Models\ShoppingCartVariant;
+use Stichoza\GoogleTranslate\GoogleTranslate;
+
 class ProductVariantController extends Controller
 {
     public function __construct()
@@ -32,6 +34,7 @@ class ProductVariantController extends Controller
 
     public function store(Request $request)
     {
+        $tr = new GoogleTranslate('ar');
         $rules = [
             'name' => 'required',
             'product_id' => 'required',
@@ -44,9 +47,12 @@ class ProductVariantController extends Controller
         $this->validate($request, $rules,$customMessages);
 
         $product = Product::find($request->product_id)->first();
+        
+
         if($product){
             $variant = new ProductVariant();
             $variant->name = $request->name;
+            $variant->name_ar = $tr->translate($request->name);
             $variant->product_id = $request->product_id;
             $variant->status = $request->status;
             $variant->save();
@@ -77,6 +83,7 @@ class ProductVariantController extends Controller
 
         $variant = ProductVariant::find($id);
         $variant->name = $request->name;
+        $variant->name_ar = $request->name_ar;
         $variant->status = $request->status;
         $variant->save();
 

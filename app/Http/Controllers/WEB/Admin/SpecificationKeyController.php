@@ -37,6 +37,7 @@ class SpecificationKeyController extends Controller
 
         $SpecificationKey = new ProductSpecificationKey();
         $SpecificationKey->key = $request->key;
+        $SpecificationKey->key_ar = $request->key_ar;
         $SpecificationKey->status = $request->status;
         $SpecificationKey->save();
 
@@ -73,6 +74,7 @@ class SpecificationKeyController extends Controller
         $this->validate($request, $rules,$customMessages);
 
         $SpecificationKey->key = $request->key;
+        $SpecificationKey->key_ar = $request->key_ar;
         $SpecificationKey->status = $request->status;
         $SpecificationKey->save();
 

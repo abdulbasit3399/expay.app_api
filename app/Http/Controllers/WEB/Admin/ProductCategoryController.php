@@ -57,6 +57,15 @@ class ProductCategoryController extends Controller
 
         $category = new Category();
 
+        if($request->category_image){
+            $extention = $request->category_image->getClientOriginalExtension();
+            $category_image = 'slider'.date('-Y-m-d-h-i-s-').rand(999,9999).'.'.$extention;
+            $category_image = 'uploads/custom-images/'.$category_image;
+            Image::make($request->category_image)
+                ->save(public_path().'/'.$category_image);
+            $category->image = $category_image;
+        }
+
         $category->name_ar = $tr->translate($request->name);
         $category->name = $request->name;
         $category->slug = $request->slug;
@@ -101,6 +110,20 @@ class ProductCategoryController extends Controller
         ];
         $this->validate($request, $rules,$customMessages);
 
+        if($request->category_image){
+            $existing_slider = $category->image;
+            $extention = $request->category_image->getClientOriginalExtension();
+            $category_image = 'slider'.date('-Y-m-d-h-i-s-').rand(999,9999).'.'.$extention;
+            $category_image = 'uploads/custom-images/'.$category_image;
+            Image::make($request->category_image)
+                ->save(public_path().'/'.$category_image);
+            $category->image = $category_image;
+            $category->save();
+            if($existing_slider){
+                if(File::exists(public_path().'/'.$existing_slider))unlink(public_path().'/'.$existing_slider);
+            }
+        }
+        
         $category->icon = $request->icon;
         $category->name_ar = $request->name_ar;
         $category->name = $request->name;

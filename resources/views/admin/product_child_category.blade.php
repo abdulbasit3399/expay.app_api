@@ -40,7 +40,7 @@
                                         <td>{{ ++$index }}</td>
                                         <td>{{ $childCategory->name }}</td>
                                         <td>{{ $childCategory->slug }}</td>
-                                        <td>{{ $childCategory->subCategory->name }}</td>
+                                        <td>{{ $childCategory->subCategory ? $childCategory->subCategory->name :'' }}</td>
                                         <td>{{ $childCategory->category->name }}</td>
                                         <td>
                                             @if($childCategory->status == 1)

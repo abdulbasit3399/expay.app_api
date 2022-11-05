@@ -32,8 +32,9 @@
                             <thead>
                                 <tr>
                                     <th width="10%">{{__('admin.SN')}}</th>
-                                    <th width="30%">{{__('admin.Name')}}</th>
-                                    <th width="30%">{{__('admin.Status')}}</th>
+                                    <th width="20%">{{__('admin.Name')}}</th>
+                                    <th width="20%">{{__('admin.Name')}} AR</th>
+                                    <th width="20%">{{__('admin.Status')}}</th>
                                     <th width="30%">{{__('admin.Action')}}</th>
                                   </tr>
                             </thead>
@@ -42,6 +43,7 @@
                                     <tr>
                                         <td>{{ ++$index }}</td>
                                         <td>{{ $variant->name }}</td>
+                                        <td>{{ $variant->name_ar }}</td>
                                         <td>
                                             @if($variant->status == 1)
                                             <a href="javascript:;" onclick="changeVariantStatus({{ $variant->id }})">
@@ -141,6 +143,10 @@
                                         <label>{{__('admin.Name')}} <span class="text-danger">*</span></label>
                                         <input type="text" id="name" class="form-control"  name="name" value="{{ $variant->name }}">
                                         <input type="hidden" id="product_id" class="form-control"  name="product_id" value="{{ $product->id }}">
+                                    </div>
+                                    <div class="form-group col-12">
+                                        <label>{{__('admin.Name')}} AR</label>
+                                        <input type="text" id="name_ar" class="form-control"  name="name_ar" value="{{ $variant->name_ar }}">
                                     </div>
                                     <div class="form-group col-12">
                                         <label>{{__('admin.Status')}} <span class="text-danger">*</span></label>
