@@ -4,7 +4,7 @@ namespace App\Services;
 
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Hashing\AbstractHasher;
-
+ 
 class MagentoHasher extends AbstractHasher implements Hasher
 {
     const CHARS_LOWERS = 'abcdefghijklmnopqrstuvwxyz';
