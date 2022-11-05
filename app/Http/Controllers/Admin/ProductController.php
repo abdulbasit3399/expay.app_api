@@ -38,6 +38,7 @@ class ProductController extends Controller
         $products = Product::with('category','seller','brand')->where(['vendor_id' => 0])->orderBy('id','desc')->get();
         $orderProducts = OrderProduct::all();
         $setting = Setting::first();
+
         return response()->json(['setting' => $setting , 'orderProducts' => $orderProducts, 'products' => $products], 200);
     }
 

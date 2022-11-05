@@ -10,7 +10,7 @@ class Address extends Model
     use HasFactory;
 
     public function country(){
-        return $this->belongsTo(Country::class)->select('id','name');
+        return $this->belongsTo(Country::class)->select('id','name','code');
     }
 
     public function countryState(){

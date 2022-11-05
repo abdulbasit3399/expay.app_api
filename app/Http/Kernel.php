@@ -70,10 +70,5 @@ class Kernel extends HttpKernel
         'checkseller' => \App\Http\Middleware\CheckSeller::class,
         'demo' => \App\Http\Middleware\DemoHandler::class,
         'XSS' => \App\Http\Middleware\XSSProtection::class,
-        'localize'                => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRoutes::class,
-        'localizationRedirect'    => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
-        'localeSessionRedirect'   => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
-        'localeCookieRedirect'    => \Mcamara\LaravelLocalization\Middleware\LocaleCookieRedirect::class,
-        'localeViewPath'          => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath::class
     ];
 }
