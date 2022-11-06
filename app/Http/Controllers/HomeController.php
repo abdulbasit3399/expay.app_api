@@ -986,6 +986,8 @@ class HomeController extends Controller
       $products->where('child_category_id',$request->child_category_id);
     if($request->brand_id)
       $products->where('brand_id',$request->brand_id);
+    if(isset($request->min_price) && $request->min_price != null && isset($request->max_price) && $request->max_price != null)
+      $products->whereBetween('price',[$request->min_price,$request->max_price]);
 
     $products->select('id','name','name_ar', 'short_name', 'slug', 'thumb_image','qty','sold_qty', 'price', 'offer_price','is_undefine','is_featured','new_product', 'is_top', 'is_best','category_id','sub_category_id','child_category_id','brand_id');
 

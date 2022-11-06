@@ -71,7 +71,9 @@ class Slider10Controller extends Controller
         $slider->title_one_ar = $request->title_one ? $tr->translate($request->title_one) : '';
         $slider->title_two_ar = $request->title_two ? $tr->translate($request->title_two) : '';
 
-        $slider->product_slug = $request->product_slug;
+        $brand = Brand::where('slug',$request->product_slug)->first();
+        $slider->brand_slug = $brand->slug;
+        $slider->brand_id = $brand->id;
         $slider->serial = $request->serial;
         $slider->status = $request->status;
         $slider->title_one = $request->title_one;
@@ -140,10 +142,12 @@ class Slider10Controller extends Controller
             }
         }
 
+        $brand = Brand::where('slug',$request->product_slug)->first();
+        $slider->brand_slug = $brand->slug;
+        $slider->brand_id = $brand->id;
         $slider->badge_ar = $request->badge_ar;
         $slider->title_one_ar = $request->title_one_ar;
         $slider->title_two_ar = $request->title_two_ar;
-        $slider->product_slug = $request->product_slug;
         $slider->serial = $request->serial;
         $slider->status = $request->status;
         $slider->title_one = $request->title_one;

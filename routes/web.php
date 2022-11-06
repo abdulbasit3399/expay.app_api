@@ -269,7 +269,6 @@ Route::group(['middleware' => ['maintainance']], function () {
 });
 
 // start admin routes
-Route::group(['prefix' => LaravelLocalization::setLocale()], function(){
 Route::group(['as'=> 'admin.', 'prefix' => 'admin'],function (){
 
     // start auth route
@@ -292,6 +291,7 @@ Route::group(['as'=> 'admin.', 'prefix' => 'admin'],function (){
 
     Route::resource('product-sub-category', ProductSubCategoryController::class);
     Route::put('product-sub-category-status/{id}', [ProductSubCategoryController::class,'changeStatus'])->name('product.sub.category.status');
+    Route::post('product-sub-category-status/import', [ProductSubCategoryController::class,'import'])->name('product.sub.category.import');
 
     Route::resource('product-child-category', ProductChildCategoryController::class);
     Route::put('product-child-category-status/{id}', [ProductChildCategoryController::class,'changeStatus'])->name('product.child.category.status');
@@ -315,6 +315,7 @@ Route::group(['as'=> 'admin.', 'prefix' => 'admin'],function (){
     Route::get('seller-product', [ProductController::class,'sellerProduct'])->name('seller-product');
     Route::get('seller-pending-product', [ProductController::class,'sellerPendingProduct'])->name('seller-pending-product');
     Route::get('stockout-product', [ProductController::class,'stockoutProduct'])->name('stockout-product');
+    Route::post('product-import', [ProductController::class,'import'])->name('product-import');
 
 
 
@@ -666,7 +667,6 @@ Route::group(['as'=> 'admin.', 'prefix' => 'admin'],function (){
     Route::post('update-validation-language', [LanguageController::class, 'updateValidationLanguage'])->name('update-validation-language');
 
 
-});
 });
 
 });

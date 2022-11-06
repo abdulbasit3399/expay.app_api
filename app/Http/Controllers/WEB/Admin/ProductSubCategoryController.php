@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use App\Models\PopularCategory;
 use App\Models\ThreeColumnCategory;
 use App\Models\MegaMenuSubCategory;
+use App\Imports\SubCategoryImport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class ProductSubCategoryController extends Controller
 {
     public function __construct()
@@ -166,5 +169,27 @@ class ProductSubCategoryController extends Controller
         }
         return response()->json($message);
     }
+    public function import(Request $request)
+    {
+        $main = $request->main_cat;
+        $cat = Category::where('name',$request->main_cat)->first();
+        if(!$cat){
+            $notification = array('messege'=>'Main Category not exists','alert-type'=>'error');
+            return redirect()->back()->with($notification);
+        }
 
+        $cat_arr = array();
+        $array = Excel::toArray(new SubCategoryImport, $request->image);
+        for ($i=0; $i < count($array[0]); $i++) { 
+            if($array[0][$i][0]){
+
+                $name_arr = (explode(",",$array[0][$i][0]));
+                $name_arr[0] = str_replace("/","",$name_arr[0]);
+                if(!in_array($name_arr[0], $cat_arr))
+                    $cat_arr[] = $name_arr[0];
+
+            }
+        }
+        dd($cat_arr);
+    }
 }

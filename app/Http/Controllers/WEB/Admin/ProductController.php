@@ -27,6 +27,8 @@ use Image;
 use File;
 use Str;
 use Stichoza\GoogleTranslate\GoogleTranslate;
+use App\Imports\ProductImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -389,7 +391,124 @@ class ProductController extends Controller
         return response()->json($message);
     }
 
+    public function import(Request $request)
+    {
+        $array = Excel::toArray(new ProductImport, $request->file, null, \Maatwebsite\Excel\Excel::CSV);
+        $product = array();
+        $ex_prod = $cur_prod = '';
+        $tr = new GoogleTranslate('ar');
 
+        for($i=1; $i < count($array[0]); $i++) { 
+            $cur_prod = $array[0][$i][1];
+            if($ex_prod != $cur_prod && $array[0][$i][1] != null)
+            {
+                $product = new Product;
+                $product->name_ar = '';
+                $product->short_name_ar = '';
+                $product->short_description_ar = '';
+                $product->long_description_ar = '';
+
+                $product->short_name = $array[0][$i][2];
+                $product->name = $array[0][$i][1];
+                $product->slug = $array[0][$i][5];
+                $product->thumb_image = $array[0][$i][6] ?? '';
+                $product->category_id = $array[0][$i][8] ?? 0;
+                $product->sub_category_id = $array[0][$i][9] ?? 0;
+                $product->child_category_id = $array[0][$i][10] ?? 0;
+                $product->brand_id = $array[0][$i][11] ?? 0;
+                $product->sku = $array[0][$i][20] ?? '';
+                $product->price = $array[0][$i][23] ?? 0;
+                $product->offer_price = $array[0][$i][24];
+                $product->qty = $array[0][$i][12] ?? 1;
+                $product->short_description = $array[0][$i][1] ?? '';
+                $product->long_description = $array[0][$i][16] ?? '';
+                $product->status = $array[0][$i][32] ?? 1;
+                $product->weight = $array[0][$i][13] ?? 1;
+                $product->is_undefine = $array[0][$i][27] ?? 1;
+                $product->is_specification = $array[0][$i][33] ?? 0;
+                $product->seo_title = $array[0][$i][18] ?? '';
+                $product->seo_description = $array[0][$i][19] ?? '';
+                $product->is_top = $array[0][$i][30] ?? 0;
+                $product->new_product = $array[0][$i][29] ?? 0;
+                $product->is_best = $array[0][$i][31] ?? 0;
+                $product->is_featured = $array[0][$i][28] ?? 0;
+                $product->approve_by_admin = 1;
+                $product->save();
+
+                $variant_arr = explode(',',$array[0][$i][37]);
+                foreach ($variant_arr as $key => $variant_string) {
+                    if(preg_match($request->variants, $variant_string) === 1)
+                    {
+                        $var_name = explode('=',$variant_string);
+                        $varient = new ProductVariant;
+                        $varient->product_id = $product->id;
+                        $varient->name = $var_name[0];
+                        $varient->status = 1;
+                        $varient->save();
+
+                        $var_item = new ProductVariantItem;
+                        $var_item->product_variant_id = $varient->id;
+                        $var_item->product_variant_name = $var_name[0];
+                        $var_item->product_id = $product->id;
+                        $var_item->name = $var_name[1];
+                        $var_item->price = $array[0][$i][23] ?? 0;
+                        $var_item->status = 1;
+                        $var_item->is_default = 0;
+                        $var_item->save();
+                    }
+                }
+
+                //save new product 
+                //$product_id = $save_prod->id;
+
+                $ex_prod = $cur_prod;
+            }
+            else{
+                
+                $variant_arr = explode(',',$array[0][$i][37]);
+                foreach ($variant_arr as $key => $variant_string) {
+                    if(preg_match($request->variants, $variant_string) === 1)
+                    {
+                        $var_name = explode('=',$variant_string);
+
+                        $prev_varient = ProductVariant::where([['product_id',$product->id],['name',$var_name[0]]])->first();
+                        if(!$prev_varient)
+                        {
+                            $varient = new ProductVariant;
+                            $varient->product_id = $product->id;
+                            $varient->name = $var_name[0];
+                            $varient->status = 1;
+                            $varient->save();
+                        }                     
+                        
+                        $var_item = new ProductVariantItem;
+                        $var_item->product_variant_id = $varient->id;
+                        $var_item->product_variant_name = $var_name[0];
+                        $var_item->product_id = $product->id;
+                        $var_item->name = $var_name[1];
+                        $var_item->price = $array[0][$i][23] ?? 0;
+                        $var_item->status = 1;
+                        $var_item->is_default = 0;
+                        $var_item->save();
+                    }
+                }
+
+            }
+
+            // $variant_arr = explode(',',$array[0][$i][3]);
+            // foreach ($variant_arr as $key => $variant_string) {
+            //     if(preg_match($request->variants, $variant_string) === 1)
+            //     {
+            //         // $product['product'][] =
+            //     }
+            // }
+            // dump($variant_arr);
+        }
+        $notification=array('messege'=>'Import Successfully.','alert-type'=>'success');
+        return redirect()->route('admin.product.index')->with($notification);
+
+
+    }
 
 
 
