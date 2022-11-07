@@ -233,6 +233,10 @@
                   <small>For example: (sizess|color|size)</small>
                 </div>
                 <div class="form-group col-12">
+                  <label>Base Image URL</label>
+                  <input type="text" name="base_url" class="form-control" >
+                </div>
+                <div class="form-group col-12">
                   <label>{{__('Image')}} <span class="text-danger">*</span></label>
                   <input type="file" name="file" class="form-control" id="file">
                 </div>

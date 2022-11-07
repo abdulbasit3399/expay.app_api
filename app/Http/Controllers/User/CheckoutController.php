@@ -54,43 +54,52 @@ class CheckoutController extends Controller
                 $ciy = $addr->city->name;
             }
         }
-        $params = array(
-            'ClientInfo'            => $this->_getClientInfo(),
-                                    
-            'Transaction'           => array(
-                                        'Reference1'            => '001' 
-                                    ),
-                                    
-            'OriginAddress'         => array(
-                                        'City'                  => env('ORIGIN_CITY'),
-                                        'CountryCode'           => env('ORIGIN_COUNTRY_CODE')
-                                    ),
-                                    
-            'DestinationAddress'    => array(
-                                        'City'                  => $ciy,
-                                        'CountryCode'           => $country_code
-                                    ),
-            'ShipmentDetails'       => array(
-                                        'PaymentType'            => 'P',
-                                        'ProductGroup'           => 'EXP',
-                                        'ProductType'            => 'PPX',
-                                        'ActualWeight'           => array('Value' => $weight, 'Unit' => 'KG'),
-                                        'ChargeableWeight'       => array('Value' => $weight, 'Unit' => 'KG'),
-                                        'NumberOfPieces'         => $qty
-                                    )
-        );
-        
-        $soapClient = new \SoapClient(storage_path('aramex/aramex-rates-calculator-wsdl.wsdl'), array('trace' => 1));
-        $results = $soapClient->CalculateRate($params);
-        $shipping_cost = 0;
 
-        if($results->HasErrors == false)
+        if($country_code != 'QA'){
+            $weight = $weight > 0 ? $weight : 1;
+            $params = array(
+                'ClientInfo'            => $this->_getClientInfo(),
+                                        
+                'Transaction'           => array(
+                                            'Reference1'            => '001' 
+                                        ),
+                                        
+                'OriginAddress'         => array(
+                                            'City'                  => env('ORIGIN_CITY'),
+                                            'CountryCode'           => env('ORIGIN_COUNTRY_CODE')
+                                        ),
+                                        
+                'DestinationAddress'    => array(
+                                            'City'                  => $ciy,
+                                            'CountryCode'           => $country_code
+                                        ),
+                'ShipmentDetails'       => array(
+                                            'PaymentType'            => 'P',
+                                            'ProductGroup'           => 'EXP',
+                                            'ProductType'            => 'PPX',
+                                            'ActualWeight'           => array('Value' => $weight, 'Unit' => 'KG'),
+                                            'ChargeableWeight'       => array('Value' => $weight, 'Unit' => 'KG'),
+                                            'NumberOfPieces'         => $qty
+                                        )
+            );
+
+            $soapClient = new \SoapClient(storage_path('aramex/aramex-rates-calculator-wsdl.wsdl'), array('trace' => 1));
+            $results = $soapClient->CalculateRate($params);
+            $shipping_cost = 0;
+
+            if($results->HasErrors == false)
+            {
+                $shipping_cost = $results->TotalAmount->Value;
+            }
+            else{
+                return response()->json(['message' => $results->Notifications->Notification->Message],403);
+            }
+        }
+        else
         {
-            $shipping_cost = $results->TotalAmount->Value;
+            $shipping_cost = 25;
         }
-        else{
-            return response()->json(['message' => "Address is not Valid."],403);
-        }
+        
 
         if($cartProducts->count() == 0){
             $notification = trans('Your shopping cart is empty');
@@ -137,26 +146,26 @@ class CheckoutController extends Controller
     }
     private function _getClientInfo()
     {
-        // return [
-        //     'AccountNumber'         => '4004636',
-        //     'UserName'              => 'reem@reem.com',
-        //     'Password'              => '123456789',
-        //     'AccountPin'            => '432432',
-        //     'AccountEntity'         => 'RUH',
-        //     'AccountCountryCode'    => 'SA',
-        //     'Version'               => 'v1',
-        //     'Source'             => null
-        // ];
         return [
-            'AccountNumber'         => '60520280',
-            'UserName'              => 'zahraa.muzahem@icloud.com',
-            'Password'              => 'Zahraa@20',
-            'AccountPin'            => '321321',
-            'AccountEntity'         => 'DOH',
-            'AccountCountryCode'    => 'QA',
+            'AccountNumber'         => '4004636',
+            'UserName'              => 'reem@reem.com',
+            'Password'              => '123456789',
+            'AccountPin'            => '432432',
+            'AccountEntity'         => 'RUH',
+            'AccountCountryCode'    => 'SA',
             'Version'               => 'v1',
             'Source'             => null
         ];
+        // return [
+        //     'AccountNumber'         => '60520280',
+        //     'UserName'              => 'zahraa.muzahem@icloud.com',
+        //     'Password'              => 'Zahraa@20',
+        //     'AccountPin'            => '321321',
+        //     'AccountEntity'         => 'DOH',
+        //     'AccountCountryCode'    => 'QA',
+        //     'Version'               => 'v1',
+        //     'Source'             => null
+        // ];
     }
     public function shipment_rate(Request $request)
     {

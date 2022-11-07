@@ -170,7 +170,8 @@ class HomeController extends Controller
 
   public function subCategory($id){
     $sub_category = SubCategory::find($id);
-    return response()->json(['sub_category' => $sub_category]);
+    $products = Product::with('activeVariants.activeVariantItems')->where(['sub_category_id' => $id, 'status' => 1,'approve_by_admin' => 1])->select('id','name', 'short_name', 'slug', 'thumb_image','qty','sold_qty', 'price', 'offer_price','is_undefine','is_featured','new_product', 'is_top', 'is_best','category_id','sub_category_id','child_category_id','brand_id')->orderBy('id','desc')->get();
+    return response()->json(['sub_category' => $sub_category, 'products' => $products]);
   }
 
   public function childCategory($id){
