@@ -8,6 +8,8 @@ use App\Models\BlogCategory;
 use App\Models\BlogComment;
 use App\Models\PopularPost;
 use Illuminate\Http\Request;
+use App\Models\Country;
+use App\Models\City;
 use  Image;
 use File;
 use Auth;
@@ -30,7 +32,66 @@ class BlogController extends Controller
         $categories = BlogCategory::where('status',1)->get();
         return view('admin.create_blog',compact('categories'));
     }
+    public function save_city()
+    {
+        $countries = Country::where('status',1)->get();
+        foreach ($countries as $key => $count) {
+            $params = array(
+                'ClientInfo'            => $this->_getClientInfo(),
 
+                'Transaction'           => array(
+                                            'Reference1'            => '001',
+                                            'Reference2'            => '002',
+                                            'Reference3'            => '003',
+                                            'Reference4'            => '004',
+                                            'Reference5'            => '005'
+                                     
+                                        ),
+                'CountryCode'           => $count->code,
+
+                'State'             => NULL,
+
+                'NameStartsWith'        => ''
+
+                );
+            $soapClient = new \SoapClient(storage_path('aramex/Location-APIWSDL.wsdl'), array('trace' => 1));
+            $results = $soapClient->FetchCities($params); 
+            for ($i=0; $i < count($results->Cities->string); $i++) { 
+                $city = new City;
+                $city->country_id = $count->id;
+                $city->country_state_id = 0;
+                $city->name = $results->Cities->string[$i];
+                $city->slug = $results->Cities->string[$i];
+                $city->status = 1;
+                $city->save();
+            }
+        }
+        
+        // return $results;
+    }
+    private function _getClientInfo()
+    {
+        return [
+            'AccountNumber'         => '4004636',
+            'UserName'              => 'reem@reem.com',
+            'Password'              => '123456789',
+            'AccountPin'            => '432432',
+            'AccountEntity'         => 'RUH',
+            'AccountCountryCode'    => 'SA',
+            'Version'               => 'v1',
+            'Source'             => null
+        ];
+        // return [
+        //     'AccountNumber'         => '60520280',
+        //     'UserName'              => 'zahraa.muzahem@icloud.com',
+        //     'Password'              => 'Zahraa@20',
+        //     'AccountPin'            => '321321',
+        //     'AccountEntity'         => 'DOH',
+        //     'AccountCountryCode'    => 'QA',
+        //     'Version'               => 'v1',
+        //     'Source'             => null
+        // ];
+    }
 
     public function store(Request $request)
     {

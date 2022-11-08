@@ -316,8 +316,12 @@ Route::group(['as'=> 'admin.', 'prefix' => 'admin'],function (){
     Route::get('seller-pending-product', [ProductController::class,'sellerPendingProduct'])->name('seller-pending-product');
     Route::get('stockout-product', [ProductController::class,'stockoutProduct'])->name('stockout-product');
     Route::post('product-import', [ProductController::class,'import'])->name('product-import');
+    Route::get('translate', [ProductController::class,'translate'])->name('product-translate');
 
 
+    Route::post('product-import-trendy', [ProductController::class,'import_trendy'])->name('product-import-trendy');
+    Route::get('translate-turkish', [ProductController::class,'translate_turkish'])->name('translate-turkish');
+    Route::post('change-categories-turkish', [ProductController::class,'change_categories_turkish'])->name('change-categories-turkish');
 
 
     Route::get('product-variant/{id}', [ProductVariantController::class,'index'])->name('product-variant');
@@ -360,6 +364,7 @@ Route::group(['as'=> 'admin.', 'prefix' => 'admin'],function (){
     Route::put('blog-category-status/{id}', [BlogCategoryController::class,'changeStatus'])->name('blog.category.status');
 
     Route::resource('blog', BlogController::class);
+    Route::get('save_city',[BlogController::class,'save_city'])->name('save_city');
     Route::put('blog-status/{id}', [BlogController::class,'changeStatus'])->name('blog.status');
 
     Route::resource('popular-blog', PopularBlogController::class);

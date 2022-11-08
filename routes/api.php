@@ -120,6 +120,7 @@ Route::group(['middleware' => ['maintainance']], function () {
 
     Route::get('/product-by-category/{id}', [HomeController::class, 'productByCategory'])->name('product-by-category');
     Route::post('/product-filter', [HomeController::class, 'product_filter'])->name('product-filter');
+    Route::get('/brands', [HomeController::class, 'brands_list'])->name('brands-list');
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/about-us', [HomeController::class, 'aboutUs'])->name('about-us');

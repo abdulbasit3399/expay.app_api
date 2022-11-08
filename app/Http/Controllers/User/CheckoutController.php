@@ -146,26 +146,26 @@ class CheckoutController extends Controller
     }
     private function _getClientInfo()
     {
-        return [
-            'AccountNumber'         => '4004636',
-            'UserName'              => 'reem@reem.com',
-            'Password'              => '123456789',
-            'AccountPin'            => '432432',
-            'AccountEntity'         => 'RUH',
-            'AccountCountryCode'    => 'SA',
-            'Version'               => 'v1',
-            'Source'             => null
-        ];
         // return [
-        //     'AccountNumber'         => '60520280',
-        //     'UserName'              => 'zahraa.muzahem@icloud.com',
-        //     'Password'              => 'Zahraa@20',
-        //     'AccountPin'            => '321321',
-        //     'AccountEntity'         => 'DOH',
-        //     'AccountCountryCode'    => 'QA',
+        //     'AccountNumber'         => '4004636',
+        //     'UserName'              => 'reem@reem.com',
+        //     'Password'              => '123456789',
+        //     'AccountPin'            => '432432',
+        //     'AccountEntity'         => 'RUH',
+        //     'AccountCountryCode'    => 'SA',
         //     'Version'               => 'v1',
         //     'Source'             => null
         // ];
+        return [
+            'AccountNumber'         => '60520280',
+            'UserName'              => 'zahraa.muzahem@icloud.com',
+            'Password'              => 'Zahraa@20',
+            'AccountPin'            => '321321',
+            'AccountEntity'         => 'DOH',
+            'AccountCountryCode'    => 'QA',
+            'Version'               => 'v1',
+            'Source'             => null
+        ];
     }
     public function shipment_rate(Request $request)
     {

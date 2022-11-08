@@ -214,7 +214,10 @@ class HomeController extends Controller
     $popularCategorySidebarBanner = $setting->popular_category_banner;
 
     $brandVisibility = HomePageOneVisibility::find(5);
-    $brands = Brand::where(['status' => 1])->get()->take($brandVisibility->qty);
+    $brands = \DB::table('brands')->rightjoin('products','products.brand_id','=','brands.id')->select('brands.*')
+              ->groupBy('brands.name')
+              ->get()->take(2);
+    // $brands = Brand::where(['status' => 1])->get()->take($brandVisibility->qty);
     $brandVisibility = $brandVisibility->status == 1 ? true : false;
 
     $flashSale = FlashSale::first();
@@ -1012,7 +1015,12 @@ class HomeController extends Controller
   }
 
 
+  public function brands_list()
+  {
+    $brands = Brand::where('status',1)->get();
 
+    return response()->json(['brands' => $brands]);
+  }
 
 
 

@@ -37,7 +37,7 @@
                                 @foreach ($products as $index => $product)
                                     <tr>
                                         <td>{{ ++$index }}</td>
-                                        <td><a href="javscript:;">{{ $product->short_name }}</a></td>
+                                        <td><a href="{{$product->product_url}}" target="_blank">{{ $product->short_name }}</a></td>
                                         <td>{{ $setting->currency_icon }}{{ $product->price }}</td>
                                         <td> <img class="rounded-circle" src="{{ asset($product->thumb_image) }}" alt="" width="100px" height="100px"></td>
                                         <td>

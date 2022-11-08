@@ -250,6 +250,130 @@
         </div>
       </div>
 
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <h3>Trendy Products Import</h3>
+                </div>
+                <div class="col-md-6">
+                  <a href="{{asset('sample/trendyol_product_sample.csv')}}" class="btn btn-success" style="float:right;">Download Sample</a>
+                </div>
+              </div>
+              
+              
+              <form method="post" action="{{ route('admin.product-import-trendy') }}" enctype="multipart/form-data">
+                @csrf
+
+                
+                <div class="form-group col-12">
+                  <label>{{__('Image')}} <span class="text-danger">*</span></label>
+                  <input type="file" name="file" class="form-control" id="file">
+                </div>
+                <div class="form-group col-12">
+                    <button type="submit" class="btn btn-primary">Import</button>
+                </div>
+
+                <div class="form-group col-12">
+                    <a href="{{route('admin.translate-turkish')}}" class="btn btn-success">Translate Trendy Products</a>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <h3>Trendy Products Change Categories</h3>
+                </div>
+              </div>
+              
+              
+              <form method="post" action="{{ route('admin.change-categories-turkish') }}" enctype="multipart/form-data">
+                @csrf
+
+                
+                <div class="row">
+                  <div class="col-md-6 form-group">
+                    <select class="form-control" name="category_tr">
+                      <option>Select Main Category Turkish</option>
+                      @foreach($categories_tr as $cat)
+                      <option value="{{$cat->category_tr}}">{{$cat->category_tr}}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <select class="form-control" name="category_id">
+                      <option>Select Main Category</option>
+                      @foreach($categories as $cat)
+                      <option value="{{$cat->id}}">{{$cat->name}}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 form-group">
+                    <select class="form-control" name="sub_category_tr">
+                      <option>Select Sub Category Turkish</option>
+                      @foreach($sub_categories_tr as $cat)
+                      <option value="{{$cat->sub_category_tr}}">{{$cat->sub_category_tr}}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <select class="form-control" name="sub_category_id">
+                      <option>Select Sub Category</option>
+                      @foreach($sub_categories as $cat)
+                      <option value="{{$cat->id}}">{{$cat->name}}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 form-group">
+                    <select class="form-control" name="child_category_tr">
+                      <option>Select Child Category Turkish</option>
+                      @foreach($child_categories_tr as $cat)
+                      <option value="{{$cat->child_category_tr}}">{{$cat->child_category_tr}}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <select class="form-control" name="child_category_id">
+                      <option>Select Child Category</option>
+                      @foreach($child_categories as $cat)
+                      <option value="{{$cat->id}}">{{$cat->name}}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="form-group col-12">
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                  </div>
+                </div>
+                
+
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </section>
   </div>
 
