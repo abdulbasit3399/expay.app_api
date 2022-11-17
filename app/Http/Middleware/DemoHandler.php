@@ -9,6 +9,7 @@ class DemoHandler
 {
     public function handle(Request $request, Closure $next)
     {
+        return $next($request);
         if(Route::is('admin.login') || Route::is('store-login') || Route::is('admin.logout')){
             return $next($request);
          }else{

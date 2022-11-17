@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class OrderProductVariant extends Model
 {
     use HasFactory;
+    protected $casts = [
+        'product_id' => 'string',
+        'order_product_id' => 'string'
+    ];
 }

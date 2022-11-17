@@ -34,7 +34,8 @@
   <link rel="stylesheet" href="{{ asset('backend/clockpicker/dist/bootstrap-clockpicker.css') }}">
   <link rel="stylesheet" href="{{ asset('backend/datetimepicker/jquery.datetimepicker.css') }}">
   <link rel="stylesheet" href="{{ asset('backend/css/iziToast.min.css') }}">
-
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
   <script src="{{ asset('backend/js/jquery-3.6.0.min.js') }}"></script>
 <style>
     .fade.in {

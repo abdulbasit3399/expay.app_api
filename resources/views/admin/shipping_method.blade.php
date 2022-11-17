@@ -106,7 +106,7 @@
                                     <select name="city_id" id="" class="form-control select2">
                                         <option value="0">{{__('All')}}</option>
                                         @foreach ($cities as $city)
-                                        <option value="{{ $city->id }}">{{ $city->name }}, {{ $city->countryState->name }}, {{ $city->countryState->country->name }}</option>
+                                        <option value="{{ $city->id }}">{{ $city->name }}, {{ $city->country->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

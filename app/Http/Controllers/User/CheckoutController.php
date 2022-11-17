@@ -37,21 +37,34 @@ class CheckoutController extends Controller
     public function checkout(Request $request){
         $user = Auth::guard('api')->user();
         $cartProducts = ShoppingCart::with('product','variants.variantItem')->where('user_id', $user->id)->select('id','product_id','qty')->get();
+        $addresses = Address::with('country','countryState','city')->where(['user_id' => $user->id])->get();
 
         $weight = 0;
         $qty = 0;
-        $addresses = Address::with('country','countryState','city')->where(['user_id' => $user->id])->get();
 
         foreach ($cartProducts as $key => $cart) {
             $weight += $cart->product->weight;
             $qty += $cart->qty;
         }
         $ciy = $country_code = '';
-        foreach ($addresses as $key => $addr) {
-            if($addr->default_shipping == 1)
-            {
-                $country_code = $addr->country->code;
-                $ciy = $addr->city->name;
+
+        if($request->country_id && $request->city_id)
+        {
+            $country = Country::find($request->country_id);
+            $city_data = City::find($request->city_id);
+
+            $country_code = $country->code;
+            $ciy = $city_data->name;
+        }
+        else
+        {
+            
+            foreach ($addresses as $key => $addr) {
+                if($addr->default_shipping == 1)
+                {
+                    $country_code = $addr->country ? $addr->country->code : '';
+                    $ciy = $addr->city ? $addr->city->name : '';
+                }
             }
         }
 
@@ -97,7 +110,7 @@ class CheckoutController extends Controller
         }
         else
         {
-            $shipping_cost = 25;
+            $shipping_cost = 20;
         }
         
 
@@ -143,6 +156,10 @@ class CheckoutController extends Controller
             'shippingCost'   => $shipping_cost
         ],200);
 
+    }
+    public function calculate_shipping_rate(Request $request)
+    {
+        
     }
     private function _getClientInfo()
     {

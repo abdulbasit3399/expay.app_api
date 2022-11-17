@@ -117,10 +117,14 @@ Route::group([
     Route::post('me', [AuthController::class, 'me']);
 
 });
+Route::get('/test1', [ProductController::class, 'test1']);
+Route::get('/test2', [ProductController::class, 'test2']);
+
 
 Route::group(['as'=> 'user.', 'prefix' => 'user'],function (){
     Route::group(['as'=> 'checkout.', 'prefix' => 'checkout'],function (){
 
+        
         Route::get('/paypal-web-view', [PaypalController::class, 'paypalWebView'])->name('paypal-web-view');
         Route::get('/pay-with-paypal', [PaypalController::class, 'payWithPaypal'])->name('pay-with-paypal');
         Route::get('/paypal-payment-success', [PaypalController::class, 'paypalPaymentSuccess'])->name('paypal-payment-success');
@@ -211,7 +215,6 @@ Route::group(['middleware' => ['maintainance']], function () {
         Route::get('subcategory-by-category/{id}', [SellerProductController::class,'getSubcategoryByCategory'])->name('subcategory-by-category');
         Route::get('childcategory-by-subcategory/{id}', [SellerProductController::class,'getChildcategoryBySubCategory'])->name('childcategory-by-subcategory');
 
-
         Route::get('product-variant/{id}', [SellerProductVariantController::class,'index'])->name('product-variant');
         Route::get('create-product-variant/{id}', [SellerProductVariantController::class,'create'])->name('create-product-variant');
         Route::post('store-product-variant', [SellerProductVariantController::class,'store'])->name('store-product-variant');
@@ -287,6 +290,7 @@ Route::group(['as'=> 'admin.', 'prefix' => 'admin'],function (){
     Route::put('profile-update', [AdminProfileController::class,'update'])->name('profile.update');
 
     Route::resource('product-category', ProductCategoryController::class);
+    Route::post('product-category-brands', [ProductCategoryController::class,'product_category_brands'])->name('product-category-brands');
     Route::put('product-category-status/{id}', [ProductCategoryController::class,'changeStatus'])->name('product.category.status');
 
     Route::resource('product-sub-category', ProductSubCategoryController::class);
@@ -297,6 +301,9 @@ Route::group(['as'=> 'admin.', 'prefix' => 'admin'],function (){
     Route::put('product-child-category-status/{id}', [ProductChildCategoryController::class,'changeStatus'])->name('product.child.category.status');
     Route::get('subcategory-by-category/{id}', [ProductChildCategoryController::class,'getSubcategoryByCategory'])->name('subcategory-by-category');
     Route::get('childcategory-by-subcategory/{id}', [ProductChildCategoryController::class,'getChildcategoryBySubCategory'])->name('childcategory-by-subcategory');
+
+    Route::get('subcategory-by-category-turkish/{name}', [ProductChildCategoryController::class,'getSubcategoryByCategoryTurkish'])->name('subcategory-by-category-turkish');
+    Route::get('childcategory-by-subcategory-turkish/{main_name}/{sub_name}', [ProductChildCategoryController::class,'getChildcategoryBySubCategoryTurkish'])->name('childcategory-by-subcategory-turkish');
 
     Route::resource('product-brand', ProductBrandController::class);
     Route::put('product-brand-status/{id}', [ProductBrandController::class,'changeStatus'])->name('product.brand.status');
@@ -319,10 +326,12 @@ Route::group(['as'=> 'admin.', 'prefix' => 'admin'],function (){
     Route::get('translate', [ProductController::class,'translate'])->name('product-translate');
 
 
+    Route::get('trendy-products', [ProductController::class,'trendy_products'])->name('trendy-products');
+    Route::get('create-trendy-products', [ProductController::class,'create_trendy'])->name('create-trendy-products');
     Route::post('product-import-trendy', [ProductController::class,'import_trendy'])->name('product-import-trendy');
     Route::get('translate-turkish', [ProductController::class,'translate_turkish'])->name('translate-turkish');
     Route::post('change-categories-turkish', [ProductController::class,'change_categories_turkish'])->name('change-categories-turkish');
-
+    Route::post('single-categories-turkish', [ProductController::class,'single_categories_turkish'])->name('single-categories-turkish');
 
     Route::get('product-variant/{id}', [ProductVariantController::class,'index'])->name('product-variant');
     Route::get('create-product-variant/{id}', [ProductVariantController::class,'create'])->name('create-product-variant');

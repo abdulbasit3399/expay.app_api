@@ -3,6 +3,17 @@
 <title>{{__('admin.Products')}}</title>
 @endsection
 @section('admin-content')
+<style type="text/css">
+    .section-body a > svg{
+        width: 20px !important;
+    }
+    svg{
+        width: 20px !important;
+    }
+    .justify-between > a{
+        display: none;
+    }
+</style>
       <!-- Main Content -->
       <div class="main-content">
         <section class="section">
@@ -21,24 +32,23 @@
                   <div class="card">
                     <div class="card-body">
                       <div class="table-responsive table-invoice">
-                        <table class="table table-striped data-table" id="">
+                        <table class="table table-striped" id="dataTable1">
                             <thead>
                                 <tr>
-                                    <th>{{__('admin.SN')}}</th>
-                                    <th>{{__('admin.Name')}}</th>
-                                    <th>{{__('admin.Price')}}</th>
-                                    <th>{{__('admin.Photo')}}</th>
-                                    <th>{{__('admin.Type')}}</th>
-                                    <th>{{__('admin.Status')}}</th>
-                                    <th>{{__('admin.Action')}}</th>
+                                    <th width="5%">{{__('admin.SN')}}</th>
+                                    <th width="30%">{{__('admin.Name')}}</th>
+                                    <th width="10%">{{__('admin.Price')}}</th>
+                                    <th width="15%">{{__('admin.Photo')}}</th>
+                                    <th width="15%">{{__('admin.Type')}}</th>
+                                    <th width="10%">{{__('admin.Status')}}</th>
+                                    <th width="15%">{{__('admin.Action')}}</th>
                                   </tr>
                             </thead>
                             <tbody>
-
-                                {{--  @foreach ($products as $index => $product)
+                                @foreach ($products as $index => $product)
                                     <tr>
                                         <td>{{ ++$index }}</td>
-                                        <td><a href="javscript:;">{{ $product->short_name }}</a></td>
+                                        <td><a href="{{$product->product_url}}" target="_blank">{{ $product->short_name }}</a></td>
                                         <td>{{ $setting->currency_icon }}{{ $product->price }}</td>
                                         <td> <img class="rounded-circle" src="{{ asset($product->thumb_image) }}" alt="" width="100px" height="100px"></td>
                                         <td>
@@ -101,9 +111,10 @@
 
                                         </td>
                                     </tr>
-                                @endforeach  --}}
+                                  @endforeach
                             </tbody>
                         </table>
+                        {{$products->links()}}
                       </div>
                     </div>
                   </div>
@@ -126,33 +137,6 @@
               </div>
           </div>
       </div>
-<script type="text/javascript">
-$(function () {
-
-    var table = $('.data-table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('admin.product.index') }}",
-        columns: [
-            {data: 'id', name: 'id'},
-            {data: 'name', name: 'name'},
-            {data: 'price', name: 'price'},
-            { data: 'thumb_image', name: 'thumb_image',
-                render: function( data ) {
-                    return "<img src=\"" + data + "\" height=\"50\" width=\"50\" />";
-                }
-            },
-
-            {data: 'type', name: 'type', orderable: false, searchable: false},
-            {data: 'status', name: 'status', orderable: false, searchable: false},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
-
-        ]
-    });
-
-});
-</script>
-
 <script>
     function deleteData(id){
         $("#deleteForm").attr("action",'{{ url("admin/product/") }}'+"/"+id)
@@ -172,9 +156,9 @@ $(function () {
             },
             error:function(err){
                 console.log(err);
+
             }
         })
     }
 </script>
-
 @endsection

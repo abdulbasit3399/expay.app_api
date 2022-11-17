@@ -236,7 +236,7 @@ class UserProfileController extends Controller
     }
 
     public function cityByState($id){
-        $cities = City::select('id','country_state_id','name')->where(['status' => 1, 'country_state_id' => $id])->get();
+        $cities = City::select('id','country_state_id','name')->where(['status' => 1, 'country_id' => $id])->get();
         return response()->json(['cities'=>$cities]);
     }
 
@@ -505,6 +505,17 @@ class UserProfileController extends Controller
         return response()->json(['notification' => $notification]);
     }
 
+    public function delete_acount()
+    {
+        $user = Auth::guard('api')->user()->id;
+        $user_prof = User::find($user);
+        $user_prof->account_active = 0;
+        $user_prof->status = 0;
+        $user_prof->save();
+
+        $notification = trans('Account Deleted');
+        return response()->json(['notification' => $notification]);
+    }
 
 
 

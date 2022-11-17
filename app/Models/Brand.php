@@ -9,6 +9,10 @@ class Brand extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'status' => 'string',
+    ];
+
     public function products(){
         return $this->hasMany(Product::class);
     }

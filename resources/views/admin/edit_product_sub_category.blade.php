@@ -68,6 +68,18 @@
                     <input type="file" id="image" class="form-control"  name="image">
                   </div>
 
+                  @if($subCategory->image_2)
+                  <div class="form-group col-12">
+                    <label>{{__('admin.Current Image')}}</label>
+                    <div>
+                        <img src="{{ asset($subCategory->image_2) }}" alt="" width="200px">
+                    </div>
+                  </div>
+                  @endif
+                  <div class="form-group col-12">
+                    <label>{{__('Image')}} 2</label>
+                    <input type="file" id="image2" class="form-control"  name="image2">
+                  </div>
                 </div>
                 <div class="row">
                   <div class="col-12">

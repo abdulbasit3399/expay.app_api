@@ -5,7 +5,7 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^7.2|^8.0",
         "artisaninweb/laravel-soap": "0.3.0.10",
         "bumbummen99/shoppingcart": "^4.0",
         "codedredd/laravel-soap": "^2.0",
@@ -30,7 +30,8 @@
         "razorpay/razorpay": "^2.8",
         "stichoza/google-translate-php": "^4.1",
         "stripe/stripe-php": "^7.110",
-        "tymon/jwt-auth": "^1.0.0-rc.2"
+        "tymon/jwt-auth": "^1.0.0-rc.2",
+        "yajra/laravel-datatables-oracle": "^9.21"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

@@ -104,6 +104,7 @@ Route::group([
 
 });
 
+Route::post('/product-filter', [HomeController::class, 'product_filter'])->name('product-filter');
 
 Route::group(['middleware' => ['demo','XSS']], function () {
 
@@ -119,8 +120,8 @@ Route::group(['middleware' => ['maintainance']], function () {
     Route::get('/child-category/{id}', [HomeController::class, 'childCategory'])->name('child-category');
 
     Route::get('/product-by-category/{id}', [HomeController::class, 'productByCategory'])->name('product-by-category');
-    Route::post('/product-filter', [HomeController::class, 'product_filter'])->name('product-filter');
     Route::get('/brands', [HomeController::class, 'brands_list'])->name('brands-list');
+    Route::get('/sub_cat_brands', [HomeController::class, 'sub_cat_brands'])->name('sub_cat_brands');
 
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/about-us', [HomeController::class, 'aboutUs'])->name('about-us');
@@ -150,6 +151,7 @@ Route::group(['middleware' => ['maintainance']], function () {
     Route::get('/add-to-compare/{id}', [HomeController::class, 'addToCompare'])->name('add-to-compare');
     Route::get('/remove-compare/{id}', [HomeController::class, 'removeCompare'])->name('remove-compare');
     Route::get('/flash-sale', [HomeController::class, 'flashSale'])->name('flash-sale');
+    Route::get('/coupon-list', [HomeController::class, 'coupon_list'])->name('coupon-list');
     Route::post('subscribe-request', [HomeController::class, 'subscribeRequest'])->name('subscribe-request');
     Route::get('subscriber-verification/{token}', [HomeController::class, 'subscriberVerifcation'])->name('subscriber-verification');
 
@@ -192,6 +194,7 @@ Route::group(['middleware' => ['maintainance']], function () {
         Route::get('get-review/{id}', [UserProfileController::class, 'showReview'])->name('show-review');
         Route::get('my-profile', [UserProfileController::class, 'myProfile'])->name('my-profile');
         Route::post('update-profile', [UserProfileController::class, 'updateProfile'])->name('update-profile');
+        Route::get('delete-account', [UserProfileController::class, 'delete_acount'])->name('delete-account');
         Route::get('address', [UserProfileController::class, 'address'])->name('address');
         Route::post('update-password', [UserProfileController::class, 'updatePassword'])->name('update-password');
 
@@ -219,6 +222,7 @@ Route::group(['middleware' => ['maintainance']], function () {
 
         Route::group(['as'=> 'checkout.', 'prefix' => 'checkout'],function (){
             Route::get('/', [CheckoutController::class, 'checkout'])->name('checkout');
+            Route::post('/calculate-shipping-rate', [CheckoutController::class, 'calculate_shipping_rate'])->name('calculate-shipping-rate');
             Route::post('/shipment_rate', [CheckoutController::class, 'shipment_rate'])->name('shipment_rate');
 
             Route::post('/cash-on-delivery', [PaymentController::class, 'cashOnDelivery'])->name('cash-on-delivery');

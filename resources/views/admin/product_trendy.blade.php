@@ -15,7 +15,7 @@
           </div>
 
           <div class="section-body">
-            <a href="{{ route('admin.product.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> {{__('admin.Add New')}}</a>
+            <a href="{{ route('admin.create-trendy-products') }}" class="btn btn-primary"><i class="fas fa-plus"></i> {{__('admin.Add New')}}</a>
             <div class="row mt-4">
                 <div class="col">
                   <div class="card">
@@ -132,7 +132,7 @@ $(function () {
     var table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('admin.product.index') }}",
+        ajax: "{{ route('admin.trendy-products') }}",
         columns: [
             {data: 'id', name: 'id'},
             {data: 'name', name: 'name'},

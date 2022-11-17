@@ -58,6 +58,10 @@
                     <label>{{__('Image')}} <span class="text-danger">*</span></label>
                     <input type="file" name="image" class="form-control" id="image">
                   </div>
+                  <div class="form-group col-12">
+                    <label>{{__('Image')}} 2</label>
+                    <input type="file" name="image2" class="form-control" id="image2">
+                  </div>
                 </div>
                 <div class="row">
                   <div class="col-12">

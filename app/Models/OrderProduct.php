@@ -9,6 +9,14 @@ class OrderProduct extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'order_id' => 'string',
+        'product_id' => 'string',
+        'seller_id' => 'string',
+        'unit_price' => 'string',
+        'qty' => 'string',
+    ];
+
     public function seller(){
         return $this->belongsTo(Vendor::class,'seller_id');
     }

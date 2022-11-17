@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\WEB\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\Brand;
 use App\Models\Category;
+use App\Models\EmailTemplate;
 use App\Models\PopularCategory;
 use App\Models\FeaturedCategory;
+use App\Models\CategoryBrands;
 use App\Models\MegaMenuSubCategory;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 use App\Models\MegaMenuCategory;
@@ -87,7 +91,21 @@ class ProductCategoryController extends Controller
     public function edit($id)
     {
         $category = Category::find($id);
-        return view('admin.edit_product_category',compact('category'));
+        $category_brands = CategoryBrands::where('category_id',$id)->orderBy('serial','ASC')->get();
+        $brands = Brand::all();
+
+        $name = '';
+        if(count($category_brands) > 0){
+            foreach ($category_brands as $key => $brand) {
+                $current_brand = Brand::find($brand->brand_id);
+                $name .= $current_brand->name.'->';
+            }
+            
+            $name = rtrim($name, "->");
+        }
+
+        $category_brands = json_decode(json_encode($category_brands),true);
+        return view('admin.edit_product_category',compact('category','brands','category_brands','name'));
     }
 
 
@@ -164,5 +182,23 @@ class ProductCategoryController extends Controller
             $message= trans('admin_validation.Active Successfully');
         }
         return response()->json($message);
+    }
+    public function product_category_brands(Request $request)
+    {
+        if(isset($request->brands))
+        {
+            $category_brands = CategoryBrands::where('category_id',$request->category_id)->delete();
+            foreach ($request->brands as $key => $brand) {
+                $new = new CategoryBrands;
+                $new->category_id = $request->category_id;
+                $new->brand_id = $brand;
+                $new->serial = $key;
+                $new->save();
+            }
+        }
+        
+        
+        $notification = array('messege'=>'Brands added successfully.','alert-type'=>'success');
+        return redirect()->route('admin.product-category.index')->with($notification);
     }
 }

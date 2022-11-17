@@ -9,6 +9,20 @@ class Address extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'user_id' => 'string',
+        'name' => 'string',
+        'email' => 'string',
+        'phone' => 'string',
+        'country_id' => 'string',
+        'state_id' => 'string',
+        'city_id' => 'string',
+        'address' => 'string',
+        'type' => 'string',
+        'default_shipping' => 'string',
+        'default_billing' => 'string',
+    ];
+
     public function country(){
         return $this->belongsTo(Country::class)->select('id','name','code');
     }

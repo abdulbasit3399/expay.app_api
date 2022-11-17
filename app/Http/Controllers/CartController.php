@@ -83,6 +83,9 @@ class CartController extends Controller
     }
 
     public function cartItemIncrement($id){
+        $user = Auth::guard('api')->user();
+        
+
         $item = ShoppingCart::find($id);
         $current_qty = $item->qty;
 
@@ -91,24 +94,29 @@ class CartController extends Controller
 
         if($stock < $current_qty){
             $notification = trans('user_validation.Quantity not available in our stock');
-            return response()->json(['message' => $notification],403);
+            return response()->json(['message' => $notification,],403);
         }
 
         $item->qty = $item->qty + 1;
         $item->save();
 
+        $cartProducts = ShoppingCart::with('product','variants.variantItem')->where('user_id', $user->id)->select('id','product_id','qty')->get();
+
         $notification = trans('Update successfully');
-        return response()->json(['message' => $notification]);
+        return response()->json(['message' => $notification,'cartProducts' => $cartProducts]);
     }
 
     public function cartItemDecrement($id){
+        $user = Auth::guard('api')->user();
         $item = ShoppingCart::find($id);
         if($item->qty > 1){
             $item->qty = $item->qty - 1;
             $item->save();
 
+            $cartProducts = ShoppingCart::with('product','variants.variantItem')->where('user_id', $user->id)->select('id','product_id','qty')->get();
+            
             $notification = trans('Update successfully');
-            return response()->json(['message' => $notification]);
+            return response()->json(['message' => $notification,'cartProducts' => $cartProducts]);
         }else{
             $notification = trans('Something went wrong');
             return response()->json(['message' => $notification],403);

@@ -9,6 +9,11 @@ class SubCategory extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'category_id' => 'string',
+        'status' => 'string',
+    ];
+    
     public function category(){
         return $this->belongsTo(Category::class);
     }

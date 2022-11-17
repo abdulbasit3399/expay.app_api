@@ -73,6 +73,15 @@ class ProductSubCategoryController extends Controller
             $subCategory->image = $image;
         }
 
+        if($request->image2){
+            $extention = $request->image->getClientOriginalExtension();
+            $image = 'slider'.date('-Y-m-d-h-i-s-').rand(999,9999).'.'.$extention;
+            $image = 'uploads/custom-images/'.$image;
+            Image::make($request->image2)
+                ->save(public_path().'/'.$image);
+            $subCategory->image_2 = $image;
+        }
+
         $subCategory->save();
 
         $notification = trans('admin_validation.Created Successfully');
@@ -125,6 +134,20 @@ class ProductSubCategoryController extends Controller
             Image::make($request->image)
                 ->save(public_path().'/'.$image);
             $subCategory->image = $image;
+            $subCategory->save();
+            if($existing_slider){
+                if(File::exists(public_path().'/'.$existing_slider))unlink(public_path().'/'.$existing_slider);
+            }
+        }
+
+        if($request->image2){
+            $existing_slider = $subCategory->image_2;
+            $extention = $request->image2->getClientOriginalExtension();
+            $image = 'slider'.date('-Y-m-d-h-i-s-').rand(999,9999).'.'.$extention;
+            $image = 'uploads/custom-images/'.$image;
+            Image::make($request->image2)
+                ->save(public_path().'/'.$image);
+            $subCategory->image_2 = $image;
             $subCategory->save();
             if($existing_slider){
                 if(File::exists(public_path().'/'.$existing_slider))unlink(public_path().'/'.$existing_slider);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\WEB\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ChildCategory;
+use App\Models\Product;
 use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
@@ -40,6 +41,27 @@ class ProductChildCategoryController extends Controller
             $response .= "<option value=".$subCategory->id.">".$subCategory->name."</option>";
         }
         return response()->json(['subCategories'=>$response]);
+    }
+
+    public function getSubcategoryByCategoryTurkish($name){
+        $subCategories_products = Product::where('category_tr',$name)->groupBy('sub_category_tr')->get('sub_category_tr');
+
+        $response="<option value=''>".trans('admin_validation.Select sub category')."</option>";
+        foreach($subCategories_products as $subCategory){
+            $response .= "<option value='".$subCategory->sub_category_tr."'>".$subCategory->sub_category_tr."</option>";
+        }
+        return response()->json(['subCategories'=>$response]);
+    }
+
+    public function getChildcategoryBySubCategoryTurkish($main_name,$sub_name){
+        $childCategories=Product::where([['category_tr',$main_name],['sub_category_tr',$sub_name]])->groupBy('child_category_tr')->get('child_category_tr');
+
+        
+        $response='<option value="">'.trans('admin_validation.Select Child Category').'</option>';
+        foreach($childCategories as $childCategory){
+            $response .= "<option value='".$childCategory->child_category_tr."'>".$childCategory->child_category_tr."</option>";
+        }
+        return response()->json(['childCategories'=>$response]);
     }
 
     public function getChildcategoryBySubCategory($id){

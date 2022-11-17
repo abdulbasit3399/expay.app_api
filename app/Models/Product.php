@@ -10,6 +10,24 @@ class Product extends Model
     use HasFactory;
 
     protected $appends = ['averageRating'];
+    protected $casts = [
+        'price' => 'string',
+        'offer_price' => 'string',
+        'qty' => 'string',
+        'sold_qty' => 'string',
+        'category_id' => 'string',
+        'brand_id' => 'string',
+        'sub_category_id' => 'string',
+        'child_category_id' => 'string',
+        'is_undefine' => 'string',
+        'is_featured' => 'string',
+        'new_product' => 'string',
+        'is_top' => 'string',
+        'is_best' => 'string',
+        'status' => 'string',
+        'is_specification' => 'string',
+        'vendor_id' => 'string',
+    ];
 
     public function getAverageRatingAttribute()
     {

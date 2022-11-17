@@ -59,19 +59,18 @@ class PaymentController extends Controller
     $rules = [
       'shipping_address_id'=>'required',
       'billing_address_id'=>'required',
-      'shipping_method_id'=>'required',
+      // 'shipping_method_id'=>'required',
     ];
     $customMessages = [
       'shipping_address_id.required' => trans('Shipping address is required'),
       'billing_address_id.required' => trans('Billing address is required'),
-      'shipping_method_id.required' => trans('Shipping method is required'),
+      // 'shipping_method_id.required' => trans('Shipping method is required'),
     ];
     $this->validate($request, $rules,$customMessages);
 
     $user = Auth::guard('api')->user();
 
-    $total = $this->calculateCartTotal($user, $request->coupon, $request->shipping_method_id);
-
+    $total = $this->calculateCartTotal($user, $request->coupon);
     $total_price = $total['total_price'];
     $coupon_price = $total['coupon_price'];
     $shipping_fee = $total['shipping_fee'];
@@ -210,7 +209,7 @@ class PaymentController extends Controller
             ),
 
             'ProductGroup'          => 'EXP',
-            'ProductType'           => 'PDX',
+            'ProductType'           => 'PPX',
             'PaymentType'           => 'P',
             'PaymentOptions'        => '',
             'Services'              => '',
@@ -1183,7 +1182,7 @@ public function sslcommerz(Request $request)
 
 
 
-      public function calculateCartTotal($user, $request_coupon, $request_shipping_method_id){
+      public function calculateCartTotal($user, $request_coupon, $request_shipping_method_id = 1){
         $total_price = 0;
         $coupon_price = 0;
         $shipping_fee = 0;
@@ -1257,7 +1256,6 @@ public function sslcommerz(Request $request)
         if(!$shipping){
           return response()->json(['message' => trans('Shipping method not found')],403);
         }
-
         if($shipping->shipping_fee == 0){
           $shipping_fee = 0;
         }else{
@@ -1269,11 +1267,12 @@ public function sslcommerz(Request $request)
         $total_price = number_format($total_price, 2, '.', '');
 
         $arr = [];
+
         $arr['total_price'] = $total_price;
         $arr['coupon_price'] = $coupon_price;
         $arr['shipping_fee'] = $shipping_fee;
         $arr['productWeight'] = $productWeight;
-        $arr['shipping'] = $shipping;
+        $arr['shipping'] = $shipping->shipping_rule;
         $arr['total_qty'] = $total_qty;
 
         return $arr;
@@ -1295,7 +1294,7 @@ public function sslcommerz(Request $request)
         $order->payment_method = $payment_method;
         $order->transection_id = $transaction_id;
         $order->payment_status = $paymetn_status;
-        $order->shipping_method = $shipping->shipping_rule;
+        $order->shipping_method = $shipping;
         $order->shipping_cost = $shipping_fee;
         $order->tracking = $ship_track;
         $order->coupon_coast = $coupon_price;

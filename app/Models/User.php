@@ -13,11 +13,10 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var string[]
-     */
+    protected $casts = [
+        'status' => 'string',
+        'email_verified_at' => 'datetime',
+    ];
     protected $fillable = [
         'name',
         'email',
@@ -44,9 +43,6 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
 
     public function seller(){
         return $this->hasOne(Vendor::class);

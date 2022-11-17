@@ -9,6 +9,13 @@ class ProductReview extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'product_id' => 'string',
+        'user_id' => 'string',
+        'product_vendor_id' => 'string',
+        'status' => 'string',
+    ];
+    
     public function user(){
         return $this->belongsTo(User::class)->select('id','name','email', 'image', 'phone');
     }

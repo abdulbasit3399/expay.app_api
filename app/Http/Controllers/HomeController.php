@@ -9,7 +9,9 @@ use App\Models\Slider;
 use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\ChildCategory;
+use App\Models\CategoryBrands;
 use App\Models\PopularCategory;
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\BannerImage;
 use App\Models\Service;
@@ -842,7 +844,7 @@ class HomeController extends Controller
 
     return response()->json([
       'product' => $product,
-      'gellery' => $gellery,
+      'gallery' => $gellery,
       'tags' => $tags,
       'totalProductReviewQty' => $totalProductReviewQty,
       'totalReview' => $totalReview,
@@ -980,7 +982,7 @@ class HomeController extends Controller
 
   public function product_filter(Request $request)
   {
-    $products = Product::with('activeVariants.activeVariantItems')->where(['status' => 1,'approve_by_admin' => 1]);
+    $products = Product::with('activeVariants.activeVariantItems','brand')->where(['status' => 1,'approve_by_admin' => 1]);
 
     if($request->category_id)
       $products->where('category_id',$request->category_id);
@@ -996,7 +998,7 @@ class HomeController extends Controller
     $products->select('id','name','name_ar', 'short_name', 'slug', 'thumb_image','qty','sold_qty', 'price', 'offer_price','is_undefine','is_featured','new_product', 'is_top', 'is_best','category_id','sub_category_id','child_category_id','brand_id');
 
     if($request->price && $request->price != null)
-      $products->orderBy('offer_price',$request->price);
+      $products->orderBy('price',$request->price);
     elseif($request->rating && $request->rating != null)
       $products->orderBy('averageRating',$request->rating);
     elseif($request->is_top && $request->is_top != null)
@@ -1015,15 +1017,47 @@ class HomeController extends Controller
   }
 
 
-  public function brands_list()
+  public function brands_list(Request $request)
   {
-    $brands = Brand::where('status',1)->get();
+
+    $brands = CategoryBrands::where('category_id',$request->category_id)->orderBy('serial','ASC')->get();
+    $brands_array = array();
+
+    foreach ($brands as $key => $brand) {
+      array_push($brands_array,$brand->brands);
+    }
+    // $brands = \DB::table('brands')->rightjoin('products','products.brand_id','=','brands.id')->select('brands.*')
+    //           ->where('products.category_id',$request->category_id)
+    //           ->where('brands.status',1)
+    //           ->groupBy('brands.name')
+    //           ->get();
+    return response()->json(['brands' => $brands_array]);
+  }
+  public function sub_cat_brands(Request $request)
+  {
+    // $brands = CategoryBrands::where('category_id',$request->category_id)->orderBy('serial','ASC')->get();
+    // $brands_array = array();
+
+    // foreach ($brands as $key => $brand) {
+    //   array_push($brands_array,$brand->brands);
+    // }
+
+    $brands = Brand::rightjoin('products','products.brand_id','=','brands.id')->select('brands.*')
+              ->where('products.sub_category_id',$request->sub_category_id)
+              ->where('brands.status',1)
+              ->groupBy('brands.name')
+              ->get();
 
     return response()->json(['brands' => $brands]);
+
   }
 
 
-
+  public function coupon_list()
+  {
+    $coupons = Coupon::where('status',1)->get();
+    return response()->json(['coupons' => $coupons]);
+  }
 
 
 
