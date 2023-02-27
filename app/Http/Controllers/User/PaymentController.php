@@ -209,7 +209,7 @@ class PaymentController extends Controller
             ),
 
             'ProductGroup'          => 'EXP',
-            'ProductType'           => 'PPX',
+            'ProductType'           => 'PDX',
             'PaymentType'           => 'P',
             'PaymentOptions'        => '',
             'Services'              => '',

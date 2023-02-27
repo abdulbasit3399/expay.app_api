@@ -17,6 +17,8 @@ use Mail;
 use App\Mail\SendSingleSellerMail;
 use Image;
 use File;
+use DataTables;
+    
 class CustomerController extends Controller
 {
     public function __construct()
@@ -24,11 +26,38 @@ class CustomerController extends Controller
         $this->middleware('auth:admin');
     }
 
-    public function index(){
+    public function index(Request $request){
         $customers = User::with('city','seller','state', 'country')->orderBy('id','desc')->where('status',1)->get();
         $defaultProfile = BannerImage::whereId('15')->first();
         $orders = Order::all();
 
+        if ($request->ajax()) { 
+            $data = User::with('city','seller','state', 'country')->orderBy('id','asc')->where('status',1)->latest();
+
+            return Datatables::of($data)
+            ->addIndexColumn()
+            ->addColumn('action', function($data){
+
+                $action_btn = '';
+
+
+                $action_btn = $action_btn.'<a href="javascript:;"data-toggle="modal" data-target="#sendEmailModal-{{ $customer->id }}" class="btn btn-success btn-sm"><i class="fa fa-envelope" aria-hidden="true"></i></a>';
+
+                $action_btn = $action_btn.'<a href="'. route("admin.customer-show",$data->id) .'" class="btn btn-primary btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+                
+                $existOrder = Order::where('user_id',$data->id)->count();
+                    
+                if ($existOrder == 0){
+                    $action_btn = $action_btn.'<a href="javascript:;" data-toggle="modal" data-target="#deleteModal" onclick="deleteData('.$data->id.')" class="btn btn-danger btn-sm"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                }else{
+                    $action_btn = $action_btn.'<a href="javascript:;" data-toggle="modal" data-target="#canNotDeleteModal" class="btn btn-danger btn-sm"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                }
+                return $action_btn;
+            })        
+
+            ->rawColumns(['action'])
+            ->make(true);
+          }
         return view('admin.customer', compact('customers','defaultProfile','orders'));
     }
 

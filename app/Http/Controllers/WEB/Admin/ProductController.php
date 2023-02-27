@@ -277,7 +277,7 @@ class ProductController extends Controller
   public function index_backup()
   {
     $link = 'https://cdn.dsmcdn.com/mnresize/128/192/ty531/product/media/images/20220912/15/174446210/568168775/3/3_org_zoom.jpg';
-    
+
 
     $products = Product::with('category','seller','brand')->where([['vendor_id' , 0],['trendy_product',0]])->orderBy('id','desc')->paginate(100);
     $orderProducts = OrderProduct::all();
@@ -338,7 +338,7 @@ class ProductController extends Controller
     //   $pr = Product::find($pro->id);
     //   $pr->short_description = strip_tags($pr->short_description);
     //   $pr->save();
-      
+
     // }
     return view('admin.create_product',compact('categories','brands','specificationKeys','categories_tr'));
   }
@@ -682,14 +682,14 @@ class ProductController extends Controller
         $product = Product::where([['slug',$array[0][$i]['slug']],['trendy_product',0]])->first();
       if(!$product)
       {
-        
+
           $product = new Product;
           $product->name_ar = '';
           $product->short_name_ar = '';
           $product->short_description_ar = '';
           $product->long_description_ar = '';
 
-          $product->short_name = $array[0][$i]['short_name'] ? $array[0][$i]['short_name'] : $array[0][$i]['name']; 
+          $product->short_name = $array[0][$i]['short_name'] ? $array[0][$i]['short_name'] : $array[0][$i]['name'];
           $product->name = $array[0][$i]['name'];
           $product->slug = $array[0][$i]['slug'] ?? '';
           $product->thumb_image = $request->base_url.$array[0][$i]['thumb_image'] ?? '';
@@ -763,7 +763,7 @@ class ProductController extends Controller
                 $varient->name = $var_name[0];
                 $varient->status = 1;
                 $varient->save();
-              }                     
+              }
 
               $var_item = new ProductVariantItem;
               $var_item->product_variant_id = $varient->id;
@@ -785,7 +785,7 @@ class ProductController extends Controller
           $product_gallery->status = 1;
           $product_gallery->save();
         }
-        
+
       }
     }
 
@@ -823,7 +823,7 @@ class ProductController extends Controller
           $product->short_description_ar = '';
           $product->long_description_ar = '';
 
-          $product->short_name = $array[0][$i]['short_name'] ? $array[0][$i]['short_name'] : $array[0][$i]['name']; 
+          $product->short_name = $array[0][$i]['short_name'] ? $array[0][$i]['short_name'] : $array[0][$i]['name'];
           $product->name = $array[0][$i]['name'];
           $product->slug = $array[0][$i]['slug'] ?? '';
           $product->thumb_image = $request->base_url.$array[0][$i]['thumb_image'] ?? '';
@@ -897,7 +897,7 @@ class ProductController extends Controller
                 $varient->name = $var_name[0];
                 $varient->status = 1;
                 $varient->save();
-              }                     
+              }
 
               $var_item = new ProductVariantItem;
               $var_item->product_variant_id = $varient->id;
@@ -919,8 +919,8 @@ class ProductController extends Controller
             $product_gallery->save();
           }
         }
-        
-        
+
+
       }
 
             // $variant_arr = explode(',',$array[0][$i][3]);
@@ -1049,7 +1049,7 @@ class ProductController extends Controller
           $brand->logo = '';
           $brand->status = 1;
           $brand->save();
-          
+
         }
         $brand_id = $brand->id;
 
@@ -1132,7 +1132,7 @@ class ProductController extends Controller
           $var_item->in_tr = 1;
           $var_item->save();
         }
-        
+
       }
 
       if($variant2_name != '' && count($variant2_item) > 0)
@@ -1170,10 +1170,10 @@ class ProductController extends Controller
             $product_gallery->status = 1;
             $product_gallery->save();
           }
-          
+
         }
       }
-      
+
       $cur_prod = $ex_prod;
 
       // dump($variant2_name);
@@ -1182,7 +1182,7 @@ class ProductController extends Controller
 
       // for($j = 1; $j < count($array[0][$i]); $j++)
       // {
-        
+
 
       //   if($array[0][$i]['option2_name'])
       //   {
@@ -1209,7 +1209,7 @@ class ProductController extends Controller
       //   foreach ($value as $k => $val) {
       //     dump($val);
       //   }
-        
+
       // }
 
       // foreach ($variant2 as $key => $value) {
@@ -1217,12 +1217,12 @@ class ProductController extends Controller
       //   foreach ($value as $k => $val) {
       //     dump($val);
       //   }
-        
+
       // }
 
     }
-    
-    
+
+
     $notification=array('messege'=>'Import Successfully.','alert-type'=>'success');
     return redirect()->back()->with($notification);
 
@@ -1262,7 +1262,7 @@ class ProductController extends Controller
               $brand->logo = '';
               $brand->status = 1;
               $brand->save();
-              
+
             }
             $brand_id = $brand->id;
 
@@ -1315,13 +1315,13 @@ class ProductController extends Controller
           if($array[0][$i][36] != null)
           {
             $content = $array[0][$i][36];
- 
+
               $doc = new \DOMDocument();
               $doc->loadHTML($content);
               $xml = simplexml_import_dom($doc); // making xpath more simple
               $images = $xml->xpath('//img');
               foreach ($images as $img) {
-                if (isset($img["src"])) 
+                if (isset($img["src"]))
                 {
                   $product_gallery = new ProductGallery;
                   $product_gallery->product_id = $product->id;
@@ -1340,7 +1340,7 @@ class ProductController extends Controller
             //     $product_gallery->status = 1;
             //     $product_gallery->save();
             //   }
-              
+
             // }
 
           }
@@ -1401,7 +1401,7 @@ class ProductController extends Controller
         }
         else
         {
-          
+
           // if($array[0][$i][37] && $array[0][$i][37] != null && !in_array($array[0][$i][37],$color_arr))
           if($array[0][$i][37] && $array[0][$i][37] != null)
           {
@@ -1430,16 +1430,16 @@ class ProductController extends Controller
               $var_item->in_tr = 1;
               $var_item->save();
             }
-            
+
 
             // $color_arr[] = $array[0][$i][36];
           }
 
-          
+
           // if($array[0][$i][38] && $array[0][$i][38] != null && !in_array($array[0][$i][38],$size_arr))
           if($array[0][$i][38] && $array[0][$i][38] != null)
           {
-            
+
             $varient_size = ProductVariant::where([['product_id',$product->id],['name','Size']])->first();
             if(!$varient_size)
             {
@@ -1473,7 +1473,7 @@ class ProductController extends Controller
 
 
       }// End If not current price, Not import
-      
+
 
     }//end for loop
   }
@@ -1528,7 +1528,7 @@ class ProductController extends Controller
           'sub_category_id' => $request->sub_category_id[$i],
           'child_category_id' => $request->child_category_id[$i]
         ]);
-        
+
       }
       elseif($request->category_tr[$i] != '' && $request->category_id[$i] != '' && $request->sub_category_tr[$i] != '' && $request->sub_category_id[$i] != '')
       {
@@ -1544,7 +1544,7 @@ class ProductController extends Controller
 
       }
     }
-    
+
     $notification=array('messege'=>'Categories updated.','alert-type'=>'success');
     return redirect()->route('admin.trendy-products')->with($notification);
   }
@@ -1560,7 +1560,7 @@ class ProductController extends Controller
 
     $notification=array('messege'=>'Categories updated.','alert-type'=>'success');
     return redirect()->route('admin.trendy-products')->with($notification);
-    
+
   }
   public function test1()
   {
@@ -1569,13 +1569,13 @@ class ProductController extends Controller
     {
       \DB::table('test')->insert(['data' => date('Y-m-d H:i:s')]);
     }
-    
+
   }
 
   public function test2()
   {
     \DB::table('test')->insert(['data' => date('Y-m-d H:i:s')]);
-    
+
   }
 
 }

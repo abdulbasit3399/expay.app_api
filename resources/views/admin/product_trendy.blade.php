@@ -26,6 +26,8 @@
                                 <tr>
                                     <th>{{__('admin.SN')}}</th>
                                     <th>{{__('admin.Name')}}</th>
+                                    {{-- <th>{{__('Product Url')}}</th> --}}
+
                                     <th>{{__('admin.Price')}}</th>
                                     <th>{{__('admin.Photo')}}</th>
                                     <th>{{__('admin.Type')}}</th>
@@ -135,7 +137,14 @@ $(function () {
         ajax: "{{ route('admin.trendy-products') }}",
         columns: [
             {data: 'id', name: 'id'},
-            {data: 'name', name: 'name'},
+            {data: 'name', name: 'name', render:function(data, type, row){
+                return "<a href='"+ row.product_url +"' target='_blank'>" + row.name + "</a>"
+            }},
+
+            // { data: 'product_url', name: 'product_url', render:function(data, type, row){
+            //     return "<a href='"+ row.product_url +"'>" + row.product_url + "</a>"
+            // }},
+
             {data: 'price', name: 'price'},
             { data: 'thumb_image', name: 'thumb_image',
                 render: function( data ) {

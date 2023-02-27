@@ -15,25 +15,25 @@
           </div>
 
           <div class="section-body">
-              <a href="{{ route('admin.send-email-to-all-customer') }}" class="btn btn-primary">{{__('admin.Send email to all user')}}</a>
+              {{--  <a href="{{ route('admin.send-email-to-all-customer') }}" class="btn btn-primary">{{__('admin.Send email to all user')}}</a>  --}}
             <div class="row mt-4">
                 <div class="col">
                   <div class="card">
                     <div class="card-body">
                       <div class="table-responsive table-invoice">
-                        <table class="table table-striped" id="dataTable">
+                        <table class="table table-striped data-table" id="">
                             <thead>
                                 <tr>
-                                    <th >{{__('admin.SN')}}</th>
+                                    <th >{{__('ID')}}</th>
                                     <th >{{__('admin.Name')}}</th>
                                     <th >{{__('admin.Email')}}</th>
                                     <th >{{__('admin.Image')}}</th>
                                     <th >{{__('admin.Status')}}</th>
-                                    <th >{{__('admin.Action')}}</th>
+                                    <th >{{__('admin.Action')}}</th>  
                                   </tr>
                             </thead>
                             <tbody>
-                                @foreach ($customers as $index => $customer)
+                                {{--  @foreach ($customers as $index => $customer)
                                     <tr>
                                         <td>{{ ++$index }}</td>
                                         <td>{{ $customer->name }}</td>
@@ -77,7 +77,7 @@
                                     </td>
 
                                     </tr>
-                                  @endforeach
+                                  @endforeach  --}}
                             </tbody>
                         </table>
                       </div>
@@ -89,7 +89,7 @@
       </div>
 
 
-      @foreach ($customers as $index => $customer)
+      {{--  @foreach ($customers as $index => $customer)
       <!-- Modal -->
       <div class="modal fade" id="sendEmailModal-{{ $customer->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -122,7 +122,7 @@
               </div>
           </div>
       </div>
-      @endforeach
+      @endforeach  --}}
 
 
       <!-- Modal -->
@@ -139,6 +139,31 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        $(function () {
+
+            var table = $('.data-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "{{ route('admin.customer-list') }}",
+                columns: [
+                    {data: 'id', name: 'id'},
+                    {data: 'name', name: 'name'},
+                    {data: 'email', name: 'email'},
+                    { data: 'image', name: 'image',
+                        render: function( data ) {
+                            return "<img src=\"" + data + "\" height=\"50\" width=\"50\" />";
+                        }
+                    },
+                    {data: 'status', name: 'status'},
+
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ]
+            });
+
+        });
+    </script>
 
 <script>
     function deleteData(id){

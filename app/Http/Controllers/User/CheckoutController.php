@@ -42,6 +42,11 @@ class CheckoutController extends Controller
         $weight = 0;
         $qty = 0;
 
+        if($cartProducts->count() == 0){
+            $notification = trans('Your shopping cart is empty');
+            return response()->json(['message' => $notification],403);
+        }
+        
         foreach ($cartProducts as $key => $cart) {
             $weight += $cart->product->weight;
             $qty += $cart->qty;
@@ -67,57 +72,58 @@ class CheckoutController extends Controller
                 }
             }
         }
+        if(count($addresses) > 0)
+        {
+            if($country_code != 'QA'){
+                $weight = $weight > 0 ? $weight : 1;
+                $params = array(
+                    'ClientInfo'            => $this->_getClientInfo(),
+                                            
+                    'Transaction'           => array(
+                                                'Reference1'            => '001' 
+                                            ),
+                                            
+                    'OriginAddress'         => array(
+                                                'City'                  => env('ORIGIN_CITY'),
+                                                'CountryCode'           => env('ORIGIN_COUNTRY_CODE')
+                                            ),
+                                            
+                    'DestinationAddress'    => array(
+                                                'City'                  => $ciy,
+                                                'CountryCode'           => $country_code
+                                            ),
+                    'ShipmentDetails'       => array(
+                                                'PaymentType'            => 'P',
+                                                'ProductGroup'           => 'EXP',
+                                                'ProductType'            => 'PPX',
+                                                'ActualWeight'           => array('Value' => $weight, 'Unit' => 'KG'),
+                                                'ChargeableWeight'       => array('Value' => $weight, 'Unit' => 'KG'),
+                                                'NumberOfPieces'         => $qty
+                                            )
+                );
 
-        if($country_code != 'QA'){
-            $weight = $weight > 0 ? $weight : 1;
-            $params = array(
-                'ClientInfo'            => $this->_getClientInfo(),
-                                        
-                'Transaction'           => array(
-                                            'Reference1'            => '001' 
-                                        ),
-                                        
-                'OriginAddress'         => array(
-                                            'City'                  => env('ORIGIN_CITY'),
-                                            'CountryCode'           => env('ORIGIN_COUNTRY_CODE')
-                                        ),
-                                        
-                'DestinationAddress'    => array(
-                                            'City'                  => $ciy,
-                                            'CountryCode'           => $country_code
-                                        ),
-                'ShipmentDetails'       => array(
-                                            'PaymentType'            => 'P',
-                                            'ProductGroup'           => 'EXP',
-                                            'ProductType'            => 'PPX',
-                                            'ActualWeight'           => array('Value' => $weight, 'Unit' => 'KG'),
-                                            'ChargeableWeight'       => array('Value' => $weight, 'Unit' => 'KG'),
-                                            'NumberOfPieces'         => $qty
-                                        )
-            );
+                $soapClient = new \SoapClient(storage_path('aramex/aramex-rates-calculator-wsdl.wsdl'), array('trace' => 1));
+                $results = $soapClient->CalculateRate($params);
+                $shipping_cost = 0;
 
-            $soapClient = new \SoapClient(storage_path('aramex/aramex-rates-calculator-wsdl.wsdl'), array('trace' => 1));
-            $results = $soapClient->CalculateRate($params);
-            $shipping_cost = 0;
-
-            if($results->HasErrors == false)
-            {
-                $shipping_cost = $results->TotalAmount->Value;
+                if($results->HasErrors == false)
+                {
+                    $shipping_cost = $results->TotalAmount->Value;
+                }
+                else{
+                    return response()->json(['message' => $results->Notifications->Notification->Message],403);
+                }
             }
-            else{
-                return response()->json(['message' => $results->Notifications->Notification->Message],403);
+            else
+            {
+                $shipping_cost = 20;
             }
         }
         else
-        {
-            $shipping_cost = 20;
-        }
+            $shipping_cost = 0;
         
 
-        if($cartProducts->count() == 0){
-            $notification = trans('Your shopping cart is empty');
-            return response()->json(['message' => $notification],403);
-        }
+        
 
         
         $shippings = Shipping::all();
@@ -186,6 +192,7 @@ class CheckoutController extends Controller
     }
     public function shipment_rate(Request $request)
     {
+
         // $params = array(
         //     'ClientInfo'            => $this->_getClientInfo(),
                                     
@@ -215,34 +222,72 @@ class CheckoutController extends Controller
         // $soapClient = new \SoapClient(storage_path('aramex/aramex-rates-calculator-wsdl.wsdl'), array('trace' => 1));
         // $results = $soapClient->CalculateRate($params); 
         // return $results;
-        $soapClient = new \SoapClient(storage_path('aramex/Location-APIWSDL.wsdl'));
-        
-    
-        $params = array(
-            'ClientInfo'            => $this->_getClientInfo(),
 
-            'Transaction'           => array(
-                                        'Reference1'            => '001',
-                                        'Reference2'            => '002',
-                                        'Reference3'            => '003',
-                                        'Reference4'            => '004',
-                                        'Reference5'            => '005'
-                                 
-                                    ),
+        $soapClient = new \SoapClient(storage_path('aramex/Location-APIWSDL.wsdl'));
+        $array = ['Qatar','Saudi Arabia','Bahrain','Oman','Jordan','Iraq','Lebanon','United Arab Emirates','Tunisia','Morocco','Palestine'];
+        $countries = Country::whereIn('name',$array)->get();
+        foreach ($countries as $key => $count) {
+            $prev_city = City::where('country_id',$count->country_id)->first();
             
-            );
+            if(!$prev_city)
+            {
+                $params = array(
+                    'ClientInfo'            => $this->_getClientInfo(),
+
+                    'Transaction'           => array(
+                                            'Reference1'            => '001',
+                                            'Reference2'            => '002',
+                                            'Reference3'            => '003',
+                                            'Reference4'            => '004',
+                                            'Reference5'            => '005'
+                                     
+                                        ),
+                    'CountryCode'           => $count->code,
+
+                    'State'             => NULL,
+
+                    'NameStartsWith'        => ''
+
+                );
+                $auth_call = $soapClient->FetchCities($params);
+                for ($i=0; $i < count($auth_call->Cities->string); $i++) { 
+                    $city = new City;
+                    $city->country_id = $count->id;
+                    $city->country_state_id = 0;
+                    $city->name = $auth_call->Cities->string[$i];
+                    $city->name_ar = '';
+                    $city->slug = str_replace(' ','-',strtolower($auth_call->Cities->string[$i]));
+                    $city->status = 1;
+                    $city->save();
+                }
+            }
+            
+        }
+
+        
+        dd('sd');
+    
+        
         
         // calling the method and printing results
         try {
-            $auth_call = $soapClient->FetchCities('AE');
-
-            echo '<pre>';
-            return $auth_call;
+            $auth_call = $soapClient->FetchCountries($params);
+            for ($i=0; $i < count($auth_call->Countries->Country); $i++) { 
+                $count = new Country;
+                $count->name = $auth_call->Countries->Country[$i]->Name;
+                $count->code = $auth_call->Countries->Country[$i]->Code;
+                $count->slug = str_replace(' ','-',strtolower($auth_call->Countries->Country[$i]->Name));
+                $count->status = 1;
+                $count->save();
+            }
+            dd($auth_call->Countries);
             die();
 
         } catch (SoapFault $fault) {
             die('Error : ' . $fault->faultstring);
         }
+
+        dd('sd');
 
     }
 }
